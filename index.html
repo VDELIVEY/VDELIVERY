@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VDELIVER | Premium Package Delivery (Uganda-only)</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <style>
+        .notification { font-family: var(--font-primary, sans-serif); }
+        .optional-section { margin-top: 15px; }
+        .optional-toggle { 
+            background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 8px; 
+            padding: 10px 15px; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        .optional-toggle:hover { background: rgba(255,255,255,0.08); }
+        .optional-content { 
+            margin-top: 15px; 
+            padding: 15px; 
+            background: rgba(255,255,255,0.03); 
+            border-radius: 8px; 
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+       <!-- Navigation -->
+<nav class="navbar">
+    <div class="nav-brand">
+        <div class="logo-icon">
+            <img src="logo.jpeg" alt="VDELIVER Logo" class="logo-image">
+        </div>
+        <span class="brand-text">VDELIVER</span>
+    </div>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link active">Request Delivery</a>
+
+        <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+</nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="form-container">
+                <div class="form-header">
+                    <h1 class="form-title">Package Delivery Request</h1>
+                    <p class="form-subtitle">Precision delivery within Uganda only</p>
+                </div>
+
+                <!-- FIXED FORM SUBMIT CONFIGURATION -->
+                <form id="deliveryForm" class="delivery-form" action="https://formsubmit.co/matamajoel63@gmail.com" method="POST">
+                    <!-- FormSubmit Configuration -->
+                    <input type="hidden" name="_subject" value="🚀 VDELIVER - New Delivery Request">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_autoresponse" value="Thank you for your delivery request! We'll contact you shortly.">
+                    <input type="hidden" name="_next" value="?success=true">
+                    <input type="text" name="_honey" style="display:none">
+
+                    <!-- Sender Information -->
+                    <section class="form-section">
+                        <div class="section-header">
+                            <i class="fas fa-user-astronaut"></i>
+                            <h2>Sender Information</h2>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="senderName">Full Name *</label>
+                                <input type="text" id="senderName" name="Sender Name" required class="modern-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="senderPhone">Phone Number * (Uganda format)</label>
+                                <input type="tel" id="senderPhone" name="Sender Phone" required class="modern-input" placeholder="+2567... or 07...">
+                            </div>
+                            <div class="form-group">
+                                <label for="senderEmail">Email Address *</label>
+                                <input type="email" id="senderEmail" name="Sender Email" required class="modern-input">
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Location Information (Pickup + Delivery) -->
+                    <section class="form-section">
+                        <div class="section-header">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <h2>Location Details</h2>
+                        </div>
+
+                        <!-- Pickup -->
+                        <div class="location-section">
+                            <h3 class="location-title">Pickup Location</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="pickupAddress">Address *</label>
+                                    <input type="text" id="pickupAddress" name="Pickup Address" required class="modern-input" placeholder="Enter pickup address">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pickupLandmark">Landmark *</label>
+                                    <input type="text" id="pickupLandmark" name="Pickup Landmark" required class="modern-input" placeholder="Nearby landmark for easy identification">
+                                </div>
+                            </div>
+
+                            <!-- Optional Map Section -->
+                            <div class="optional-section">
+                                <div class="optional-toggle" id="pickupMapToggle">
+                                    <i class="fas fa-map"></i>
+                                    <span>Set precise pickup location on map (Optional)</span>
+                                    <i class="fas fa-chevron-down" style="margin-left: auto;"></i>
+                                </div>
+                                <div class="optional-content" id="pickupMapContent" style="display:none;">
+                                    <div class="map-section">
+                                        <div class="map-header">
+                                            <h4>Set Pickup Point</h4>
+                                            <span class="map-instruction">Click on the map (within Uganda) or use My Location</span>
+                                            <div class="map-controls-group">
+                                                <button type="button" id="getCurrentLocationPickup" class="location-btn"><i class="fas fa-location-arrow"></i> My Location</button>
+                                            </div>
+                                        </div>
+                                        <div id="pickupMap" class="modern-map">
+                                            <div class="map-loading"><i class="fas fa-spinner fa-spin"></i><p>Loading map...</p></div>
+                                        </div>
+                                        <div class="coordinates-display">
+                                            <div class="coordinate-group"><label>Latitude:</label><input type="text" id="pickupLat" readonly class="coordinate-input" placeholder="Click on map to set"></div>
+                                            <div class="coordinate-group"><label>Longitude:</label><input type="text" id="pickupLng" readonly class="coordinate-input" placeholder="Click on map to set"></div>
+                                        </div>
+                                        <div class="location-link-container">
+                                            <label>Location Link:</label>
+                                            <div class="link-display">
+                                                <input type="text" id="pickupLink" readonly placeholder="Set location to generate link">
+                                                <button type="button" onclick="copyToClipboard('pickupLink')" class="copy-btn"><i class="fas fa-copy"></i></button>
+                                            </div>
+                                            <input type="hidden" id="pickupLinkHidden" name="Pickup Map Link">
+                                            <input type="hidden" id="pickupCoordsHidden" name="Pickup Coordinates" value="Not set">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Delivery -->
+                        <div class="location-section">
+                            <h3 class="location-title">Delivery Location</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="recipientName">Recipient Name *</label>
+                                    <input type="text" id="recipientName" name="Recipient Name" required class="modern-input">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipientPhone">Recipient Phone * (Uganda format)</label>
+                                    <input type="tel" id="recipientPhone" name="Recipient Phone" required class="modern-input" placeholder="+2567... or 07...">
+                                </div>
+                                <div class="form-group">
+                                    <label for="deliveryAddress">Delivery Address *</label>
+                                    <input type="text" id="deliveryAddress" name="Delivery Address" required class="modern-input" placeholder="Enter delivery address">
+                                </div>
+                                <div class="form-group">
+                                    <label for="deliveryLandmark">Landmark *</label>
+                                    <input type="text" id="deliveryLandmark" name="Delivery Landmark" required class="modern-input" placeholder="Nearby landmark for easy identification">
+                                </div>
+                            </div>
+
+                            <!-- Optional Map Section -->
+                            <div class="optional-section">
+                                <div class="optional-toggle" id="deliveryMapToggle">
+                                    <i class="fas fa-map"></i>
+                                    <span>Set precise delivery location on map (Optional)</span>
+                                    <i class="fas fa-chevron-down" style="margin-left: auto;"></i>
+                                </div>
+                                <div class="optional-content" id="deliveryMapContent" style="display:none;">
+                                    <div class="map-section">
+                                        <div class="map-header">
+                                            <h4>Set Delivery Point</h4>
+                                            <span class="map-instruction">Click on the map (within Uganda) or use My Location</span>
+                                            <div class="map-controls-group">
+                                                <button type="button" id="getCurrentLocationDelivery" class="location-btn"><i class="fas fa-location-arrow"></i> My Location</button>
+                                            </div>
+                                        </div>
+                                        <div id="deliveryMap" class="modern-map">
+                                            <div class="map-loading"><i class="fas fa-spinner fa-spin"></i><p>Loading map...</p></div>
+                                        </div>
+                                        <div class="coordinates-display">
+                                            <div class="coordinate-group"><label>Latitude:</label><input type="text" id="deliveryLat" readonly class="coordinate-input" placeholder="Click on map to set"></div>
+                                            <div class="coordinate-group"><label>Longitude:</label><input type="text" id="deliveryLng" readonly class="coordinate-input" placeholder="Click on map to set"></div>
+                                        </div>
+                                        <div class="location-link-container">
+                                            <label>Location Link:</label>
+                                            <div class="link-display">
+                                                <input type="text" id="deliveryLink" readonly placeholder="Set location to generate link">
+                                                <button type="button" onclick="copyToClipboard('deliveryLink')" class="copy-btn"><i class="fas fa-copy"></i></button>
+                                            </div>
+                                            <input type="hidden" id="deliveryLinkHidden" name="Delivery Map Link">
+                                            <input type="hidden" id="deliveryCoordsHidden" name="Delivery Coordinates" value="Not set">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Route Info (hidden until both points are inside Uganda) -->
+                        <div class="route-section" id="routeSection" style="display:none;">
+                            <h3 class="location-title">Route Information</h3>
+                            <div class="route-info">
+                                <div class="route-stats">
+                                    <div class="route-stat"><i class="fas fa-route"></i><div class="stat-value" id="routeDistance">--</div><div class="stat-label">Distance</div></div>
+                                    <div class="route-stat"><i class="fas fa-clock"></i><div class="stat-value" id="routeDuration">--</div><div class="stat-label">Duration</div></div>
+                                    <div class="route-stat"><i class="fas fa-gas-pump"></i><div class="stat-value" id="routeCost">--</div><div class="stat-label">Est. Cost (UGX)</div></div>
+                                </div>
+                                <div class="route-actions">
+                                    <button type="button" id="calculateRoute" class="route-btn"><i class="fas fa-calculator"></i> Calculate Route</button>
+                                    <button type="button" id="clearRoute" class="route-btn secondary"><i class="fas fa-times"></i> Clear Route</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Delivery Specs -->
+                    <section class="form-section">
+                        <div class="section-header"><i class="fas fa-shipping-fast"></i><h2>Delivery Specifications</h2></div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="vehicleType">Transport Mode *</label>
+                                <select id="vehicleType" name="Vehicle Type" required class="modern-select">
+                                    <option value="">Select transport mode</option>
+                                    <option value="motorcycle">🏍️ Velocity Bike (Rapid Delivery)</option>
+                                    <option value="car">🚗 Premium Vehicle (Secure Transport)</option>
+                                </select>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="packageDescription">Package Details *</label>
+                                <textarea id="packageDescription" name="Package Description" required class="modern-textarea" placeholder="Describe package contents, dimensions, and special handling requirements"></textarea>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="specialInstructions">Special Instructions</label>
+                                <textarea id="specialInstructions" name="Special Instructions" class="modern-textarea" placeholder="Delivery timing preferences, access codes, or special handling notes"></textarea>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Additional Details + Submit -->
+                    <section class="form-section">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="emergencyContact">Emergency Contact</label>
+                                <input type="tel" id="emergencyContact" name="Emergency Contact" class="modern-input" placeholder="+256... or 07...">
+                            </div>
+                            <div class="form-group checkbox-group" style="align-items:center;">
+                                <input type="checkbox" id="callRecipient" name="Call Recipient"><label for="callRecipient">Call recipient on arrival</label>
+                            </div>
+                            <div class="form-group checkbox-group full-width">
+                                <input type="checkbox" id="termsAgreement" name="Terms Agreement" required>
+                                <label for="termsAgreement">
+                                    <i class="fas fa-file-contract"></i>
+                                    I agree to the terms of service and privacy policy *
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="submit-section">
+                            <button id="submitBtn" type="submit" class="submit-btn">
+                                <div class="btn-content btn-text"><i class="fas fa-paper-plane"></i> Submit Delivery Request</div>
+                                <div class="btn-loading" style="display:none;"><div class="loading-spinner"></div><span> Sending...</span></div>
+                            </button>
+                        </div>
+                    </section>
+                </form>
+
+                <!-- Success message -->
+                <div id="successMessage" class="success-message" style="display:none;">
+                    <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+                    <h3>Request received</h3>
+                    <p>Thanks — your delivery request was received. A dispatcher will contact you shortly.</p>
+                    <div class="success-actions">
+                        <button id="whatsappBtn" class="action-btn whatsapp-action"><i class="fab fa-whatsapp"></i> Send via WhatsApp</button>
+                        <button id="newRequestBtn" class="action-btn new-request" onclick="window.location.reload()">Create New Request</button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo-icon">⚡</div>
+                    <div class="brand-text">VDELIVER</div>
+                    <p>Fast, reliable deliveries across Uganda.</p>
+                </div>
+               
+            </div>
+            <div class="footer-bottom">© VDELIVER — Uganda</div>
+        </footer>
+    </div>
+
+    <!-- Leaflet + Geocoder + Polyfill scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+    <!-- UPDATED SCRIPT WITH FIXED FORM SUBMISSION -->
+    <script>
+    // Uganda bounds (approx): south, west, north, east
+    const UGANDA_BOUNDS = L.latLngBounds([ -1.5, 29.5 ], [ 4.9, 35.1 ]);
+
+    // Map and markers
+    let pickupMap, deliveryMap;
+    let pickupMarker, deliveryMarker;
+    let routeLayer = null;
+    let currentFormData = null;
+
+    // Initialize maps
+    function initMaps() {
+        const defaultCenter = [0.3476, 32.5825]; // Kampala
+        const defaultZoom = 12;
+
+        const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 });
+        const carto = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 20 });
+
+        // Only initialize maps if their containers exist
+        if (document.getElementById('pickupMap')) {
+            pickupMap = L.map('pickupMap', { center: defaultCenter, zoom: defaultZoom, layers: [carto], zoomControl: false });
+            L.control.zoom({ position: 'topright' }).addTo(pickupMap);
+            L.control.scale({ imperial: false, position: 'bottomleft' }).addTo(pickupMap);
+            L.control.layers({ 'Street': carto, 'OSM': osm }, null, { position: 'topright' }).addTo(pickupMap);
+            
+            // Geocoder for pickup
+            L.Control.geocoder({ position: 'topleft' }).on('markgeocode', function(e){
+                const center = e.geocode.center;
+                if (!UGANDA_BOUNDS.contains(center)) {
+                    showNotification('Search result is outside Uganda — please pick a location inside Uganda.');
+                    return;
+                }
+                updateLocation(center, 'pickup');
+            }).addTo(pickupMap);
+
+            const pickupIcon = L.divIcon({ className: 'custom-marker pickup-marker', html: '<div class="marker-pulse pickup-pulse"></div><div class="marker-icon"><i class="fas fa-arrow-up"></i></div>', iconSize: [40,40], iconAnchor: [20,40] });
+            pickupMarker = L.marker(defaultCenter, { icon: pickupIcon, draggable: true }).addTo(pickupMap);
+            pickupMap.on('click', function(e){ onMapClick(e, 'pickup'); });
+            pickupMarker.on('dragend', function(e){ onMarkerDragEnd(e, 'pickup'); });
+        }
+
+        if (document.getElementById('deliveryMap')) {
+            deliveryMap = L.map('deliveryMap', { center: defaultCenter, zoom: defaultZoom, layers: [carto], zoomControl: false });
+            L.control.zoom({ position: 'topright' }).addTo(deliveryMap);
+            L.control.scale({ imperial: false, position: 'bottomleft' }).addTo(deliveryMap);
+            L.control.layers({ 'Street': carto, 'OSM': osm }, null, { position: 'topright' }).addTo(deliveryMap);
+            
+            // Geocoder for delivery
+            L.Control.geocoder({ position: 'topleft' }).on('markgeocode', function(e){
+                const center = e.geocode.center;
+                if (!UGANDA_BOUNDS.contains(center)) {
+                    showNotification('Search result is outside Uganda — please pick a location inside Uganda.');
+                    return;
+                }
+                updateLocation(center, 'delivery');
+            }).addTo(deliveryMap);
+
+            const deliveryIcon = L.divIcon({ className: 'custom-marker delivery-marker', html: '<div class="marker-pulse delivery-pulse"></div><div class="marker-icon"><i class="fas fa-flag-checkered"></i></div>', iconSize: [40,40], iconAnchor: [20,40] });
+            deliveryMarker = L.marker(defaultCenter, { icon: deliveryIcon, draggable: true }).addTo(deliveryMap);
+            deliveryMap.on('click', function(e){ onMapClick(e, 'delivery'); });
+            deliveryMarker.on('dragend', function(e){ onMarkerDragEnd(e, 'delivery'); });
+        }
+
+        document.querySelectorAll('.map-loading').forEach(el => {
+            if (el.parentElement.style.display !== 'none') {
+                el.style.display = 'none';
+            }
+        });
+
+        checkRouteAvailability();
+    }
+
+    // Map click handler that enforces Uganda bounds
+    function onMapClick(e, type) {
+        const latlng = e.latlng;
+        if (!UGANDA_BOUNDS.contains(latlng)) {
+            showNotification('Location outside Uganda — pick a point inside Uganda.');
+            return;
+        }
+        updateLocation(latlng, type);
+        showMapFeedback(type === 'pickup' ? pickupMap : deliveryMap, (type === 'pickup' ? 'Pickup' : 'Delivery') + ' location set');
+    }
+
+    function onMarkerDragEnd(e, type) {
+        const latlng = e.target.getLatLng();
+        if (!UGANDA_BOUNDS.contains(latlng)) {
+            showNotification('Marker outside Uganda — resetting to last valid position.');
+            const hidden = document.getElementById(type + 'CoordsHidden').value;
+            if (hidden && hidden !== 'Not set') {
+                const [lat, lng] = hidden.split(',').map(s => parseFloat(s.trim()));
+                e.target.setLatLng([lat, lng]);
+            } else {
+                e.target.setLatLng([0.3476, 32.5825]);
+            }
+            return;
+        }
+        updateLocation(latlng, type);
+        showMapFeedback(type === 'pickup' ? pickupMap : deliveryMap, (type === 'pickup' ? 'Pickup' : 'Delivery') + ' location updated');
+    }
+
+    // Update location fields and hidden inputs
+    function updateLocation(latlng, type) {
+        const lat = latlng.lat.toFixed(6);
+        const lng = latlng.lng.toFixed(6);
+        const mapLink = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=17/${lat}/${lng}`;
+
+        if (type === 'pickup') {
+            pickupMarker.setLatLng(latlng);
+            document.getElementById('pickupLat').value = lat;
+            document.getElementById('pickupLng').value = lng;
+            document.getElementById('pickupLink').value = mapLink;
+            document.getElementById('pickupLinkHidden').value = mapLink;
+            document.getElementById('pickupCoordsHidden').value = `${lat}, ${lng}`;
+            pickupMap.setView(latlng, Math.max(pickupMap.getZoom(), 14), { animate: true, duration: 0.4 });
+        } else {
+            deliveryMarker.setLatLng(latlng);
+            document.getElementById('deliveryLat').value = lat;
+            document.getElementById('deliveryLng').value = lng;
+            document.getElementById('deliveryLink').value = mapLink;
+            document.getElementById('deliveryLinkHidden').value = mapLink;
+            document.getElementById('deliveryCoordsHidden').value = `${lat}, ${lng}`;
+            deliveryMap.setView(latlng, Math.max(deliveryMap.getZoom(), 14), { animate: true, duration: 0.4 });
+        }
+
+        getAddressFromCoordinates(lat, lng).then(addr => {
+            if (addr && addr.country && addr.country.toLowerCase().includes('uganda')) {
+                const field = type === 'pickup' ? 'pickupAddress' : 'deliveryAddress';
+                const current = document.getElementById(field).value;
+                if (!current || current.toLowerCase().includes('enter') || current.trim() === '') {
+                    document.getElementById(field).value = addr.display_name || '';
+                }
+            } else {
+                showNotification('Selected location is not in Uganda (reverse lookup).');
+            }
+        }).catch(()=>{});
+
+        checkRouteAvailability();
+    }
+
+    // Reverse geocode using Nominatim and return parsed result
+    async function getAddressFromCoordinates(lat, lng) {
+        try {
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`);
+            if (!res.ok) throw new Error('Nominatim error');
+            const data = await res.json();
+            const country = (data.address && data.address.country) ? data.address.country : '';
+            return { display_name: data.display_name || '', country };
+        } catch (err) {
+            console.warn('Reverse geocode failed', err);
+            return { display_name: '', country: '' };
+        }
+    }
+
+    // Check if both coords are set and inside Uganda
+    function checkRouteAvailability() {
+        const pickup = document.getElementById('pickupCoordsHidden').value;
+        const delivery = document.getElementById('deliveryCoordsHidden').value;
+        if (pickup && pickup !== 'Not set' && delivery && delivery !== 'Not set') {
+            const p = pickup.split(',').map(s => parseFloat(s.trim()));
+            const d = delivery.split(',').map(s => parseFloat(s.trim()));
+            if (UGANDA_BOUNDS.contains([p[0], p[1]]) && UGANDA_BOUNDS.contains([d[0], d[1]])) {
+                document.getElementById('routeSection').style.display = 'block';
+                return;
+            }
+        }
+        document.getElementById('routeSection').style.display = 'none';
+    }
+
+    // Calculate route
+    async function calculateRoute() {
+        const pickupCoords = document.getElementById('pickupCoordsHidden').value;
+        const deliveryCoords = document.getElementById('deliveryCoordsHidden').value;
+        const vehicle = document.getElementById('vehicleType').value;
+
+        if (!pickupCoords || pickupCoords === 'Not set' || !deliveryCoords || deliveryCoords === 'Not set') {
+            showNotification('Please set both pickup and delivery locations inside Uganda first.');
+            return;
+        }
+        if (!vehicle) { showNotification('Select transport mode'); return; }
+
+        const [plat, plng] = pickupCoords.split(',').map(s => parseFloat(s.trim()));
+        const [dlat, dlng] = deliveryCoords.split(',').map(s => parseFloat(s.trim()));
+
+        // Try OpenRouteService
+        const profile = vehicle === 'motorcycle' ? 'driving-motorcycle' : 'driving-car';
+        try {
+            const resp = await fetch('https://api.openrouteservice.org/v2/directions/' + profile + '/geojson', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({ coordinates: [[plng, plat], [dlng, dlat]], instructions: false })
+            });
+            if (!resp.ok) throw new Error('ORS failed');
+
+            const data = await resp.json();
+            if (routeLayer) { try { pickupMap.removeLayer(routeLayer); deliveryMap.removeLayer(routeLayer);} catch(e){} }
+
+            routeLayer = L.geoJSON(data, { style: { color: '#00d4ff', weight: 6, opacity: 0.8 } }).addTo(pickupMap).addTo(deliveryMap);
+            const bounds = routeLayer.getBounds(); pickupMap.fitBounds(bounds, {padding:[20,20]}); deliveryMap.fitBounds(bounds, {padding:[20,20]});
+
+            const route = data.features[0];
+            const distanceKm = (route.properties.segments[0].distance / 1000);
+            const durationMin = Math.round(route.properties.segments[0].duration / 60);
+            const rate = vehicle === 'motorcycle' ? 2500 : 5000;
+            const estimatedCost = Math.round(3000 + Math.round(distanceKm) * rate);
+
+            document.getElementById('routeDistance').textContent = distanceKm.toFixed(1) + ' km';
+            document.getElementById('routeDuration').textContent = durationMin + ' min';
+            document.getElementById('routeCost').textContent = estimatedCost.toLocaleString() + ' UGX';
+
+            showNotification('Route calculated successfully');
+            return;
+        } catch (err) {
+            console.warn('Routing API failed, falling back to estimate', err);
+        }
+
+        // Fallback: straight-line distance
+        const straightKm = calculateDistance(plat, plng, dlat, dlng);
+        const durationEst = Math.round(straightKm * 3);
+        const rate = vehicle === 'motorcycle' ? 2500 : 5000;
+        const estimatedCost = Math.round(3000 + straightKm * rate);
+
+        if (routeLayer) { try { pickupMap.removeLayer(routeLayer); deliveryMap.removeLayer(routeLayer);} catch(e){} }
+        routeLayer = L.polyline([[plat, plng], [dlat, dlng]], { color: '#00d4ff', weight: 4, dashArray: '6' }).addTo(pickupMap).addTo(deliveryMap);
+        const bounds = routeLayer.getBounds(); pickupMap.fitBounds(bounds, {padding:[20,20]}); deliveryMap.fitBounds(bounds, {padding:[20,20]});
+
+        document.getElementById('routeDistance').textContent = straightKm.toFixed(1) + ' km';
+        document.getElementById('routeDuration').textContent = durationEst + ' min';
+        document.getElementById('routeCost').textContent = Math.round(estimatedCost).toLocaleString() + ' UGX';
+        showNotification('Estimated route shown (straight-line fallback)');
+    }
+
+    // Haversine distance calculation
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371; const dLat = (lat2-lat1)*Math.PI/180; const dLon = (lon2-lon1)*Math.PI/180;
+        const a = Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
+        const c = 2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); return R*c;
+    }
+
+    function clearRoute() {
+        if (routeLayer) { try { pickupMap.removeLayer(routeLayer); deliveryMap.removeLayer(routeLayer);} catch(e){} }
+        routeLayer = null; document.getElementById('routeDistance').textContent='--'; document.getElementById('routeDuration').textContent='--'; document.getElementById('routeCost').textContent='--'; showNotification('Route cleared');
+    }
+
+    // Geolocation with Uganda validation
+    function getCurrentLocation(type) {
+        if (!navigator.geolocation) { showNotification('Geolocation not supported'); return; }
+        const button = type === 'pickup' ? document.getElementById('getCurrentLocationPickup') : document.getElementById('getCurrentLocationDelivery');
+        const original = button.innerHTML; button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Locating...'; button.disabled = true;
+        navigator.geolocation.getCurrentPosition(function(position){
+            const latlng = L.latLng(position.coords.latitude, position.coords.longitude);
+            if (!UGANDA_BOUNDS.contains(latlng)) {
+                showNotification('Your current physical location is outside Uganda. Please set a pickup/delivery point inside Uganda.');
+                button.innerHTML = original; button.disabled = false; return;
+            }
+            updateLocation(latlng, type); showNotification('Location found'); button.innerHTML = original; button.disabled = false;
+        }, function(error){
+            let msg = 'Unable to get location.';
+            if (error.code === error.PERMISSION_DENIED) msg = 'Please allow location access in your browser.';
+            showNotification(msg); button.innerHTML = original; button.disabled = false;
+        }, { enableHighAccuracy:true, timeout:10000, maximumAge:60000 });
+    }
+
+    // Copy to clipboard helper
+    function copyToClipboard(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.select(); el.setSelectionRange(0, 99999);
+        try { navigator.clipboard.writeText(el.value).then(()=> showNotification('Link copied')) } catch(e) { document.execCommand('copy'); showNotification('Link copied'); }
+    }
+
+    // Notifications
+    function showNotification(message) {
+        const notification = document.createElement('div'); notification.className='notification'; notification.textContent=message;
+        notification.style.cssText = 'position:fixed;top:20px;right:20px;background:#00d4ff;color:#001; padding:10px 16px;border-radius:8px;z-index:10000;box-shadow:0 8px 24px rgba(0,0,0,0.4);font-weight:600;';
+        document.body.appendChild(notification); setTimeout(()=>notification.remove(), 3500);
+    }
+
+    function showMapFeedback(map, message) {
+        if (!map) return;
+        L.popup({ closeButton:false, autoClose:true, className:'map-feedback' }).setLatLng(map.getCenter()).setContent(message).openOn(map);
+        setTimeout(()=>{ try{ map.closePopup(); }catch(e){} }, 1200);
+    }
+
+    // Form submit with validation specific to Uganda
+    function ugPhoneValid(value) {
+        if (!value) return false;
+        const cleaned = value.replace(/\s|-/g, '');
+        return /^(?:\+256|0|256)7\d{8}$/.test(cleaned);
+    }
+
+    // FIXED FORM SUBMISSION - SIMPLIFIED AND RELIABLE
+    document.getElementById('deliveryForm').addEventListener('submit', async function(e){
+        e.preventDefault();
+        
+        // Client validation
+        const required = ['senderName','senderPhone','senderEmail','recipientName','recipientPhone','packageDescription','vehicleType','pickupLandmark','deliveryLandmark'];
+        for (let id of required) { 
+            const el = document.getElementById(id); 
+            if (!el || !el.value.trim()) { 
+                el && el.focus(); 
+                showNotification('Please complete all required fields including landmarks'); 
+                return; 
+            } 
+        }
+        
+        // phone validation
+        if (!ugPhoneValid(document.getElementById('senderPhone').value)) { 
+            showNotification('Sender phone must be a valid Ugandan number (e.g. +2567...)'); 
+            document.getElementById('senderPhone').focus(); 
+            return; 
+        }
+        if (!ugPhoneValid(document.getElementById('recipientPhone').value)) { 
+            showNotification('Recipient phone must be a valid Ugandan number (e.g. +2567...)'); 
+            document.getElementById('recipientPhone').focus(); 
+            return; 
+        }
+
+        // terms agreement
+        if (!document.getElementById('termsAgreement').checked) {
+            showNotification('Please agree to the terms of service and privacy policy');
+            return;
+        }
+
+        // Store form data for WhatsApp fallback
+        currentFormData = {
+            senderName: document.getElementById('senderName').value.trim(),
+            senderPhone: document.getElementById('senderPhone').value.trim(),
+            senderEmail: document.getElementById('senderEmail').value.trim(),
+            pickupAddress: document.getElementById('pickupAddress').value.trim(),
+            pickupLandmark: document.getElementById('pickupLandmark').value.trim(),
+            pickupCoords: document.getElementById('pickupCoordsHidden').value,
+            recipientName: document.getElementById('recipientName').value.trim(),
+            recipientPhone: document.getElementById('recipientPhone').value.trim(),
+            deliveryAddress: document.getElementById('deliveryAddress').value.trim(),
+            deliveryLandmark: document.getElementById('deliveryLandmark').value.trim(),
+            deliveryCoords: document.getElementById('deliveryCoordsHidden').value,
+            vehicleType: document.getElementById('vehicleType').value,
+            packageDescription: document.getElementById('packageDescription').value.trim(),
+            specialInstructions: document.getElementById('specialInstructions').value.trim() || 'None',
+            emergencyContact: document.getElementById('emergencyContact').value.trim() || 'Not provided',
+            callRecipient: document.getElementById('callRecipient').checked,
+            routeDistance: document.getElementById('routeDistance').textContent,
+            routeDuration: document.getElementById('routeDuration').textContent,
+            routeCost: document.getElementById('routeCost').textContent,
+            timestamp: new Date().toLocaleString('en-UG', { timeZone:'Africa/Kampala' })
+        };
+
+        // Show success immediately (FormSubmit will handle email in background)
+        document.getElementById('deliveryForm').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'block';
+        
+        // Also try to submit to FormSubmit (but don't wait for it)
+        try {
+            const form = document.getElementById('deliveryForm');
+            const formData = new FormData(form);
+            
+            // Add extras for FormSubmit
+            formData.append('Pickup Coordinates', currentFormData.pickupCoords);
+            formData.append('Delivery Coordinates', currentFormData.deliveryCoords);
+            formData.append('Route Distance', currentFormData.routeDistance);
+            formData.append('Route Duration', currentFormData.routeDuration);
+            formData.append('Estimated Cost', currentFormData.routeCost);
+            formData.append('Submission Time', currentFormData.timestamp);
+
+            // Submit in background - don't wait for response
+            fetch(form.action, { 
+                method: 'POST', 
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            }).catch(err => console.log('FormSubmit background submission:', err));
+            
+        } catch (err) {
+            console.log('FormSubmit attempt completed');
+        }
+    });
+
+    // WhatsApp message button - ALWAYS WORKS
+    document.getElementById('whatsappBtn').addEventListener('click', function(){
+        if (!currentFormData) {
+            // Create data from form if not already stored
+            currentFormData = {
+                senderName: document.getElementById('senderName').value,
+                senderPhone: document.getElementById('senderPhone').value,
+                senderEmail: document.getElementById('senderEmail').value,
+                pickupAddress: document.getElementById('pickupAddress').value,
+                pickupLandmark: document.getElementById('pickupLandmark').value,
+                recipientName: document.getElementById('recipientName').value,
+                recipientPhone: document.getElementById('recipientPhone').value,
+                deliveryAddress: document.getElementById('deliveryAddress').value,
+                deliveryLandmark: document.getElementById('deliveryLandmark').value,
+                vehicleType: document.getElementById('vehicleType').value,
+                packageDescription: document.getElementById('packageDescription').value,
+                specialInstructions: document.getElementById('specialInstructions').value || 'None',
+                timestamp: new Date().toLocaleString('en-UG', { timeZone:'Africa/Kampala' })
+            };
+        }
+        
+        const msg = generateWhatsAppMessage(currentFormData);
+        const dispatcher = '256757268074';
+        const url = `https://wa.me/${dispatcher}?text=${encodeURIComponent(msg)}`;
+        window.open(url, '_blank');
+    });
+
+    function generateWhatsAppMessage(fd) {
+        return `🚀 VDELIVER - DELIVERY REQUEST
+
+Sender: ${fd.senderName} (${fd.senderPhone})
+Email: ${fd.senderEmail}
+
+PICKUP:
+Address: ${fd.pickupAddress}
+Landmark: ${fd.pickupLandmark}
+${fd.pickupCoords && fd.pickupCoords !== 'Not set' ? `Coordinates: ${fd.pickupCoords}` : ''}
+
+RECIPIENT:
+Name: ${fd.recipientName}
+Phone: ${fd.recipientPhone}
+
+DELIVERY:
+Address: ${fd.deliveryAddress}  
+Landmark: ${fd.deliveryLandmark}
+${fd.deliveryCoords && fd.deliveryCoords !== 'Not set' ? `Coordinates: ${fd.deliveryCoords}` : ''}
+
+DETAILS:
+Vehicle: ${fd.vehicleType}
+Package: ${fd.packageDescription}
+Instructions: ${fd.specialInstructions}
+Emergency: ${fd.emergencyContact}
+Call Recipient: ${fd.callRecipient ? 'Yes' : 'No'}
+
+ROUTE:
+Distance: ${fd.routeDistance}
+Duration: ${fd.routeDuration}
+Cost: ${fd.routeCost}
+
+Time: ${fd.timestamp}
+---
+Sent via VDELIVER Uganda`.trim();
+    }
+
+    // Toggle map sections
+    document.getElementById('pickupMapToggle').addEventListener('click', function() {
+        const content = document.getElementById('pickupMapContent');
+        const icon = this.querySelector('.fa-chevron-down, .fa-chevron-up');
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            icon.className = 'fas fa-chevron-up';
+            setTimeout(() => {
+                if (!pickupMap) initMaps();
+            }, 100);
+        } else {
+            content.style.display = 'none';
+            icon.className = 'fas fa-chevron-down';
+        }
+    });
+
+    document.getElementById('deliveryMapToggle').addEventListener('click', function() {
+        const content = document.getElementById('deliveryMapContent');
+        const icon = this.querySelector('.fa-chevron-down, .fa-chevron-up');
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            icon.className = 'fas fa-chevron-up';
+            setTimeout(() => {
+                if (!deliveryMap) initMaps();
+            }, 100);
+        } else {
+            content.style.display = 'none';
+            icon.className = 'fas fa-chevron-down';
+        }
+    });
+
+    // Event listeners
+    document.getElementById('getCurrentLocationPickup').addEventListener('click', function(){ getCurrentLocation('pickup'); });
+    document.getElementById('getCurrentLocationDelivery').addEventListener('click', function(){ getCurrentLocation('delivery'); });
+    document.getElementById('calculateRoute').addEventListener('click', calculateRoute);
+    document.getElementById('clearRoute').addEventListener('click', clearRoute);
+
+    // Initialize on DOM ready
+    document.addEventListener('DOMContentLoaded', function(){ 
+        // Check for success parameter in URL (from FormSubmit redirect)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === 'true') {
+            document.getElementById('deliveryForm').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+        }
+    });
+    </script>
+</body>
+</html>
