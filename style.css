@@ -1965,3 +1965,316 @@ label {
 .optional-content {
     padding: var(--space-md);
 }
+/* Enhanced Mobile Form Styles */
+@media (max-width: 768px) {
+    /* Improved form layout for mobile */
+    .form-container {
+        padding: var(--space-md);
+        margin: var(--space-sm);
+        border-radius: var(--radius-lg);
+    }
+    
+    .form-title {
+        font-size: 1.8rem;
+        line-height: 1.2;
+        text-align: center;
+    }
+    
+    .form-subtitle {
+        font-size: 1rem;
+        text-align: center;
+    }
+    
+    .form-section {
+        padding: var(--space-md);
+        margin-bottom: var(--space-md);
+        border-radius: var(--radius-md);
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-sm);
+        margin-bottom: var(--space-md);
+    }
+    
+    .section-header h2 {
+        font-size: 1.3rem;
+    }
+    
+    /* FIX: Delivery Specifications Grid */
+    .form-grid {
+        grid-template-columns: 1fr !important;
+        gap: var(--space-md);
+    }
+    
+    .form-group.full-width {
+        grid-column: 1 !important;
+    }
+    
+    /* FIX: Vehicle Type Select */
+    .modern-select {
+        width: 100%;
+        padding: var(--space-md);
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    /* FIX: Package Details Textarea */
+    .modern-textarea {
+        min-height: 120px;
+        width: 100%;
+        resize: vertical;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    /* FIX: Special Instructions Textarea */
+    #specialInstructions {
+        min-height: 100px;
+    }
+    
+    .location-section {
+        margin-bottom: var(--space-lg);
+    }
+    
+    .location-title {
+        font-size: 1.1rem;
+        margin-bottom: var(--space-md);
+    }
+    
+    .modern-map {
+        height: 300px;
+    }
+    
+    .map-header {
+        flex-direction: column;
+        gap: var(--space-sm);
+        text-align: center;
+        padding: var(--space-sm);
+    }
+    
+    .map-instruction {
+        order: -1;
+        margin-bottom: var(--space-sm);
+        font-size: 0.9rem;
+    }
+    
+    .map-controls-group {
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .coordinates-display {
+        grid-template-columns: 1fr;
+        gap: var(--space-sm);
+    }
+    
+    .link-display {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+    
+    .copy-btn {
+        width: 100%;
+        justify-content: center;
+        padding: var(--space-md);
+    }
+    
+    .route-info {
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+    
+    .route-stats {
+        justify-content: space-around;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    
+    .route-actions {
+        justify-content: center;
+        width: 100%;
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+    
+    .route-btn {
+        flex: 1;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .submit-btn {
+        min-width: auto;
+        width: 100%;
+        padding: var(--space-md) var(--space-lg);
+        font-size: 1.1rem;
+    }
+    
+    .success-actions {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+    
+    .action-btn {
+        justify-content: center;
+        width: 100%;
+        text-align: center;
+    }
+    
+    /* FIX: Checkbox groups */
+    .checkbox-group {
+        padding: var(--space-sm);
+        flex-direction: row;
+        align-items: center;
+        gap: var(--space-sm);
+    }
+    
+    .checkbox-group label {
+        margin: 0;
+        flex: 1;
+    }
+    
+    /* FIX: Emergency contact input */
+    #emergencyContact {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        flex-direction: column;
+        gap: var(--space-md);
+        padding: var(--space-md);
+    }
+    
+    .nav-links {
+        gap: var(--space-md);
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .form-title {
+        font-size: 1.5rem;
+    }
+    
+    .modern-map {
+        height: 250px;
+    }
+    
+    .route-stats {
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+    
+    .route-stat {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+        width: 100%;
+    }
+    
+    .route-actions {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+    
+    /* FIX: Form inputs for very small screens */
+    .modern-input, .modern-select, .modern-textarea {
+        padding: var(--space-sm);
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    /* FIX: Button sizing */
+    .location-btn, .copy-btn, .route-btn {
+        padding: var(--space-sm) var(--space-md);
+        font-size: 0.9rem;
+    }
+}
+
+/* Enhanced form elements for better mobile UX */
+.modern-input, .modern-select, .modern-textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* FIX: Ensure all form elements are properly sized */
+.form-group {
+    margin-bottom: var(--space-md);
+    width: 100%;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: var(--space-xs);
+    font-weight: 500;
+}
+
+/* FIX: Vehicle type select styling */
+#vehicleType {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    color: var(--space-white);
+    font-size: 1rem;
+    width: 100%;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%2300d4ff' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--space-md) center;
+    background-size: 20px;
+}
+
+/* FIX: Textareas */
+#packageDescription, #specialInstructions {
+    width: 100%;
+    min-height: 120px;
+    resize: vertical;
+    font-family: var(--font-primary);
+}
+
+/* Improved touch targets for mobile */
+.location-btn, .copy-btn, .route-btn, .action-btn, .submit-btn {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+}
+
+/* FIX: Optional section for mobile */
+.optional-toggle {
+    padding: var(--space-md);
+    font-size: 0.9rem;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.optional-content {
+    padding: var(--space-md);
+    width: 100%;
+}
+
+/* FIX: Checkbox alignment */
+.checkbox-group input[type="checkbox"] {
+    min-width: 18px;
+    min-height: 18px;
+}
+
+/* FIX: Form section spacing */
+.form-section {
+    margin-bottom: var(--space-lg);
+}
+
+/* FIX: Ensure no horizontal scrolling */
+.app-container, .main-content, .form-container {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* FIX: Delivery Specifications section specifically */
+#vehicleType, #packageDescription, #specialInstructions, #emergencyContact {
+    width: 100%;
+    box-sizing: border-box;
+}
