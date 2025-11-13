@@ -914,3 +914,25 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+// Mobile form layout fix
+function fixMobileFormLayout() {
+    if (window.innerWidth <= 768) {
+        // Force single column layout on mobile
+        const formGrids = document.querySelectorAll('.form-grid');
+        formGrids.forEach(grid => {
+            grid.style.gridTemplateColumns = '1fr';
+        });
+        
+        // Ensure full-width elements
+        const fullWidthElements = document.querySelectorAll('.form-group.full-width');
+        fullWidthElements.forEach(el => {
+            el.style.gridColumn = '1';
+        });
+    }
+}
+
+// Run on load and resize
+document.addEventListener('DOMContentLoaded', function() {
+    fixMobileFormLayout();
+    window.addEventListener('resize', fixMobileFormLayout);
+});
