@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,78 +61,109 @@
             flex-wrap: wrap;
         }
         
-        /* Google Maps Picker Styles */
-        .maps-picker-container {
-            display: flex;
-            flex-direction: column;
-            height: 80vh;
-            max-width: 100%;
-            background: var(--space-dark);
-            color: var(--space-white);
+        /* Enhanced Map Picker Modal */
+        .map-picker-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            backdrop-filter: blur(5px);
         }
         
-        .maps-picker-header {
+        .map-picker-container {
+            display: flex;
+            flex-direction: column;
+            width: 95%;
+            height: 95%;
+            background: var(--space-dark);
+            margin: 2.5% auto;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .map-picker-header {
             background: var(--space-gray);
             padding: var(--space-md);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
-        .maps-picker-header h2 {
+        .map-picker-header h2 {
             font-size: 1.5rem;
             font-weight: 600;
-            margin-bottom: var(--space-sm);
             background: linear-gradient(135deg, var(--space-blue) 0%, var(--space-electric) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin: 0;
         }
         
-        .maps-picker-instructions {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
-            max-width: 600px;
-            margin: 0 auto;
+        .close-map-picker {
+            background: none;
+            border: none;
+            color: var(--space-white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
         }
         
-        .maps-picker-main {
+        .close-map-picker:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--space-electric);
+        }
+        
+        .map-picker-main {
             display: flex;
-            flex-direction: column;
             flex: 1;
             overflow: hidden;
         }
         
-        .maps-picker-map-container {
-            height: 70vh;
+        .map-picker-map-container {
+            flex: 7; /* 70% width */
+            height: 100%;
             position: relative;
             background: var(--space-gray);
         }
         
-        .maps-picker-map {
+        .map-picker-map {
             height: 100%;
             width: 100%;
-            border: none;
         }
         
-        .maps-picker-controls {
-            height: 30vh;
+        .map-picker-controls {
+            flex: 3; /* 30% width */
             background: var(--space-dark);
             padding: var(--space-md);
             overflow-y: auto;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
         }
         
-        .maps-picker-search-section {
-            margin-bottom: var(--space-md);
+        .map-picker-search-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
         }
         
-        .maps-picker-search-box {
+        .map-picker-search-box {
             display: flex;
             gap: var(--space-sm);
             margin-bottom: var(--space-sm);
         }
         
-        .maps-picker-search-input {
+        .map-picker-search-input {
             flex: 1;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -141,11 +173,11 @@
             font-size: 1rem;
         }
         
-        .maps-picker-search-input::placeholder {
+        .map-picker-search-input::placeholder {
             color: rgba(255, 255, 255, 0.5);
         }
         
-        .maps-picker-search-btn {
+        .map-picker-search-btn {
             background: var(--space-blue);
             border: none;
             border-radius: var(--radius-md);
@@ -157,21 +189,21 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            white-space: nowrap;
         }
         
-        .maps-picker-search-btn:hover {
+        .map-picker-search-btn:hover {
             background: #0069d9;
             transform: translateY(-1px);
         }
         
-        .maps-picker-location-buttons {
+        .map-picker-location-buttons {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: var(--space-sm);
-            margin-bottom: var(--space-md);
         }
         
-        .maps-picker-location-btn {
+        .map-picker-location-btn {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: var(--radius-md);
@@ -186,51 +218,50 @@
             gap: 8px;
         }
         
-        .maps-picker-location-btn:hover {
+        .map-picker-location-btn:hover {
             background: rgba(255, 255, 255, 0.2);
             transform: translateY(-1px);
         }
         
-        .maps-picker-location-btn.primary {
+        .map-picker-location-btn.primary {
             background: var(--space-green);
         }
         
-        .maps-picker-location-btn.primary:hover {
+        .map-picker-location-btn.primary:hover {
             background: #218838;
         }
         
-        .maps-picker-coordinates-section {
+        .map-picker-coordinates-section {
             background: rgba(255, 255, 255, 0.05);
             border-radius: var(--radius-md);
             padding: var(--space-md);
-            margin-bottom: var(--space-md);
         }
         
-        .maps-picker-coordinates-section h3 {
+        .map-picker-coordinates-section h3 {
             font-size: 1rem;
             margin-bottom: var(--space-sm);
             color: var(--space-electric);
         }
         
-        .maps-picker-coordinates-display {
+        .map-picker-coordinates-display {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: var(--space-sm);
             margin-bottom: var(--space-sm);
         }
         
-        .maps-picker-coordinate-group {
+        .map-picker-coordinate-group {
             display: flex;
             flex-direction: column;
             gap: 4px;
         }
         
-        .maps-picker-coordinate-group label {
+        .map-picker-coordinate-group label {
             font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.7);
         }
         
-        .maps-picker-coordinate-input {
+        .map-picker-coordinate-input {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 6px;
@@ -240,18 +271,18 @@
             font-size: 0.9rem;
         }
         
-        .maps-picker-address-display {
+        .map-picker-address-display {
             margin-top: var(--space-sm);
         }
         
-        .maps-picker-address-display label {
+        .map-picker-address-display label {
             font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.7);
             display: block;
             margin-bottom: 4px;
         }
         
-        .maps-picker-address-input {
+        .map-picker-address-input {
             width: 100%;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -259,16 +290,19 @@
             padding: 8px;
             color: var(--space-white);
             font-size: 0.9rem;
+            min-height: 60px;
+            resize: vertical;
         }
         
-        .maps-picker-actions-section {
+        .map-picker-actions-section {
             display: flex;
             gap: var(--space-sm);
+            margin-top: auto;
         }
         
-        .maps-picker-action-btn {
+        .map-picker-action-btn {
             flex: 1;
-            padding: var(--space-sm);
+            padding: var(--space-md);
             border: none;
             border-radius: var(--radius-md);
             font-weight: 500;
@@ -280,68 +314,133 @@
             gap: 8px;
         }
         
-        .maps-picker-action-btn.primary {
+        .map-picker-action-btn.primary {
             background: var(--space-blue);
             color: var(--space-white);
         }
         
-        .maps-picker-action-btn.primary:hover {
+        .map-picker-action-btn.primary:hover {
             background: #0069d9;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
         
-        .maps-picker-action-btn.secondary {
+        .map-picker-action-btn.secondary {
             background: rgba(255, 255, 255, 0.1);
             color: var(--space-white);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
-        .maps-picker-action-btn.secondary:hover {
+        .map-picker-action-btn.secondary:hover {
             background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
         
-        /* Responsive adjustments for maps picker */
-        @media (min-width: 768px) {
-            .maps-picker-main {
-                flex-direction: row;
-            }
-            
-            .maps-picker-map-container {
-                height: 100vh;
-                width: 70%;
-            }
-            
-            .maps-picker-controls {
-                height: 100vh;
-                width: 30%;
-            }
-            
-            .maps-picker-location-buttons {
-                grid-template-columns: 1fr;
-            }
+        /* Map loading state */
+        .map-loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--space-white);
+            z-index: 1000;
         }
         
-        @media (max-width: 480px) {
-            .maps-picker-header {
-                padding: var(--space-sm);
+        .map-loading-overlay i {
+            font-size: 2rem;
+            margin-bottom: var(--space-sm);
+            color: var(--space-electric);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .map-picker-container {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                border-radius: 0;
             }
             
-            .maps-picker-header h2 {
-                font-size: 1.3rem;
-            }
-            
-            .maps-picker-controls {
-                padding: var(--space-sm);
-            }
-            
-            .maps-picker-coordinates-display {
-                grid-template-columns: 1fr;
-            }
-            
-            .maps-picker-actions-section {
+            .map-picker-main {
                 flex-direction: column;
             }
+            
+            .map-picker-map-container {
+                flex: 7; /* 70% height */
+                width: 100%;
+            }
+            
+            .map-picker-controls {
+                flex: 3; /* 30% height */
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .map-picker-coordinates-display {
+                grid-template-columns: 1fr;
+            }
+            
+            .map-picker-actions-section {
+                flex-direction: column;
+            }
+        }
+        
+        /* Enhanced custom marker for map picker */
+        .map-picker-marker {
+            width: 40px;
+            height: 40px;
+            border-radius: 50% 50% 50% 0;
+            background: var(--space-electric);
+            position: absolute;
+            transform: rotate(-45deg);
+            left: 50%;
+            top: 50%;
+            margin: -20px 0 0 -20px;
+            animation: bounce 1s infinite;
+        }
+        
+        .map-picker-marker:after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            margin: 10px 0 0 10px;
+            background: white;
+            position: absolute;
+            border-radius: 50%;
+        }
+        
+        @keyframes bounce {
+            0% { transform: rotate(-45deg) translateY(0px); }
+            50% { transform: rotate(-45deg) translateY(-10px); }
+            100% { transform: rotate(-45deg) translateY(0px); }
+        }
+        
+        /* Instructions panel */
+        .map-picker-instructions {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: var(--radius-md);
+            padding: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+        
+        .map-picker-instructions h4 {
+            color: var(--space-electric);
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .map-picker-instructions p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.8rem;
+            margin: 0;
+            line-height: 1.4;
         }
     </style>
 </head>
@@ -416,8 +515,8 @@
                                     <label for="pickupAddress">Address *</label>
                                     <input type="text" id="pickupAddress" name="Pickup Address" required class="modern-input" placeholder="Enter pickup address">
                                     <div class="location-actions">
-                                        <button type="button" class="google-maps-btn" id="pickupGoogleMapsBtn">
-                                            <i class="fas fa-map-marked-alt"></i> Select from Google Maps
+                                        <button type="button" class="google-maps-btn" id="pickupMapPickerBtn">
+                                            <i class="fas fa-map-marked-alt"></i> Select from Map
                                         </button>
                                         <button type="button" class="google-maps-btn" id="getCurrentLocationPickup" style="background: #0F9D58;">
                                             <i class="fas fa-location-arrow"></i> Use My Location
@@ -449,39 +548,4 @@
                                         <div id="pickupMap" class="modern-map">
                                             <div class="map-loading"><i class="fas fa-spinner fa-spin"></i><p>Loading map...</p></div>
                                         </div>
-                                        <div class="coordinates-display">
-                                            <div class="coordinate-group"><label>Latitude:</label><input type="text" id="pickupLat" readonly class="coordinate-input" placeholder="Click on map to set"></div>
-                                            <div class="coordinate-group"><label>Longitude:</label><input type="text" id="pickupLng" readonly class="coordinate-input" placeholder="Click on map to set"></div>
-                                        </div>
-                                        <div class="location-link-container">
-                                            <label>Location Link:</label>
-                                            <div class="link-display">
-                                                <input type="text" id="pickupLink" readonly placeholder="Set location to generate link">
-                                                <button type="button" onclick="copyToClipboard('pickupLink')" class="copy-btn"><i class="fas fa-copy"></i></button>
-                                            </div>
-                                            <input type="hidden" id="pickupLinkHidden" name="Pickup Map Link">
-                                            <input type="hidden" id="pickupCoordsHidden" name="Pickup Coordinates" value="Not set">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Delivery -->
-                        <div class="location-section">
-                            <h3 class="location-title">Delivery Location</h3>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="recipientName">Recipient Name *</label>
-                                    <input type="text" id="recipientName" name="Recipient Name" required class="modern-input">
-                                </div>
-                                <div class="form-group">
-                                    <label for="recipientPhone">Recipient Phone * (Uganda format)</label>
-                                    <input type="tel" id="recipientPhone" name="Recipient Phone" required class="modern-input" placeholder="+2567... or 07...">
-                                </div>
-                                <div class="form-group">
-                                    <label for="deliveryAddress">Delivery Address *</label>
-                                    <input type="text" id="deliveryAddress" name="Delivery Address" required class="modern-input" placeholder="Enter delivery address">
-                                    <div class="location-actions">
-                                        <button type="button" class="google-maps-btn" id="deliveryGoogleMapsBtn">
-                                            <i class="fas fa-map-marked-alt"></
+                                        <div c
