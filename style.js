@@ -9,8 +9,8 @@ const UGANDA_BOUNDS = L.latLngBounds([ -1.5, 29.5 ], [ 4.9, 35.1 ]);
 
 // Rates (UGX)
 const BASE_FEE = 3000; // flat base fee
-const RATE_MOTORCYCLE = 2500; // per km
-const RATE_CAR = 5000; // per km
+const RATE_MOTORCYCLE = 1500; // per km
+const RATE_CAR = 4000; // per km
 
 // Initialize Leaflet maps with enhanced features and Uganda restrictions
 function initMaps() {
