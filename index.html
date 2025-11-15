@@ -10,6 +10,7 @@
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
     <style>
         .notification { font-family: var(--font-primary, sans-serif); }
         .google-maps-btn {
@@ -1168,8 +1169,8 @@
             // Create a simple route display
             const distanceKm = (data.features[0].properties.segments[0].distance / 1000);
             const durationMin = Math.round(data.features[0].properties.segments[0].duration / 60);
-            const rate = vehicle === 'motorcycle' ? 2500 : 5000;
-            const estimatedCost = Math.round(3000 + Math.round(distanceKm) * rate);
+            const rate = vehicle === 'motorcycle' ? 1500 : 4000;
+            const estimatedCost = Math.round(500 + Math.round(distanceKm) * rate);
 
             document.getElementById('routeDistance').textContent = distanceKm.toFixed(1) + ' km';
             document.getElementById('routeDuration').textContent = durationMin + ' min';
@@ -1184,8 +1185,8 @@
         // Fallback: straight-line distance
         const straightKm = calculateDistance(plat, plng, dlat, dlng);
         const durationEst = Math.round(straightKm * 3);
-        const rate = vehicle === 'motorcycle' ? 2500 : 5000;
-        const estimatedCost = Math.round(3000 + straightKm * rate);
+        const rate = vehicle === 'motorcycle' ? 1500 : 4000;
+        const estimatedCost = Math.round(500 + straightKm * rate);
 
         document.getElementById('routeDistance').textContent = straightKm.toFixed(1) + ' km';
         document.getElementById('routeDuration').textContent = durationEst + ' min';
