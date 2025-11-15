@@ -441,6 +441,20 @@
             margin: 0;
             line-height: 1.4;
         }
+
+        /* Delivery location specific styles */
+        .delivery-marker {
+            background: var(--space-green) !important;
+        }
+        
+        .delivery-instructions {
+            background: rgba(40, 167, 69, 0.1) !important;
+            border: 1px solid rgba(40, 167, 69, 0.3) !important;
+        }
+        
+        .delivery-instructions h4 {
+            color: var(--space-green) !important;
+        }
     </style>
 </head>
 <body>
@@ -748,7 +762,7 @@
                 </div>
                 
                 <div class="map-picker-controls">
-                    <div class="map-picker-instructions">
+                    <div class="map-picker-instructions" id="mapPickerInstructions">
                         <h4>How to select a location:</h4>
                         <p>1. Search for a place or click directly on the map<br>
                            2. Use "My Location" to find your current position<br>
@@ -810,7 +824,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
-    <!-- UPDATED SCRIPT WITH ENHANCED MAP PICKER -->
+    <!-- UPDATED SCRIPT WITH ENHANCED MAP PICKER FOR BOTH LOCATIONS -->
     <script>
     // Uganda bounds (approx): south, west, north, east
     const UGANDA_BOUNDS = L.latLngBounds([ -1.5, 29.5 ], [ 4.9, 35.1 ]);
@@ -831,9 +845,31 @@
     function openMapPicker(type) {
         currentLocationType = type;
         
-        // Update modal title
-        document.getElementById('mapPickerTitle').textContent = 
-            `Select ${type === 'pickup' ? 'Pickup' : 'Delivery'} Location - VDELIVER`;
+        // Update modal title and styling based on location type
+        const title = document.getElementById('mapPickerTitle');
+        const instructions = document.getElementById('mapPickerInstructions');
+        
+        if (type === 'pickup') {
+            title.textContent = 'Select Pickup Location - VDELIVER';
+            instructions.className = 'map-picker-instructions';
+            instructions.innerHTML = `
+                <h4>Select Pickup Location:</h4>
+                <p>1. Search for your pickup location or click on the map<br>
+                   2. Use "My Location" to find your current position<br>
+                   3. Review the coordinates and address<br>
+                   4. Click "Select This Location" to confirm pickup point</p>
+            `;
+        } else {
+            title.textContent = 'Select Delivery Location - VDELIVER';
+            instructions.className = 'map-picker-instructions delivery-instructions';
+            instructions.innerHTML = `
+                <h4>Select Delivery Location:</h4>
+                <p>1. Search for the delivery location or click on the map<br>
+                   2. Use "My Location" to find recipient's position<br>
+                   3. Review the coordinates and address<br>
+                   4. Click "Select This Location" to confirm delivery point</p>
+            `;
+        }
         
         // Show modal
         document.getElementById('mapPickerModal').style.display = 'block';
@@ -848,6 +884,8 @@
             
             if (mapPickerMarker) {
                 mapPickerMarker.setLatLng(kampala);
+                // Update marker color based on location type
+                updateMapPickerMarkerStyle();
             }
             
             // Reset form fields
@@ -857,6 +895,20 @@
             document.getElementById('mapPickerSearchInput').value = '';
             
             selectedMapPickerLocation = null;
+        }
+    }
+
+    // Update map picker marker style based on location type
+    function updateMapPickerMarkerStyle() {
+        if (!mapPickerMarker) return;
+        
+        const markerElement = mapPickerMarker.getElement();
+        if (markerElement) {
+            if (currentLocationType === 'delivery') {
+                markerElement.className = 'map-picker-marker delivery-marker';
+            } else {
+                markerElement.className = 'map-picker-marker';
+            }
         }
     }
 
@@ -931,6 +983,9 @@
             icon: mapPickerIcon,
             draggable: true
         }).addTo(mapPickerMap);
+        
+        // Update marker style based on current location type
+        updateMapPickerMarkerStyle();
         
         // Add click listener to map
         mapPickerMap.on('click', function(e) {
@@ -1125,6 +1180,8 @@
                 const latlng = L.latLng(parseFloat(lat), parseFloat(lng));
                 updateLocation(latlng, 'pickup');
             }
+            
+            showNotification('Pickup location set from map');
         } else {
             document.getElementById('deliveryAddress').value = address;
             document.getElementById('deliveryCoordsHidden').value = `${lat}, ${lng}`;
@@ -1134,9 +1191,10 @@
                 const latlng = L.latLng(parseFloat(lat), parseFloat(lng));
                 updateLocation(latlng, 'delivery');
             }
+            
+            showNotification('Delivery location set from map');
         }
         
-        showNotification(`${currentLocationType === 'pickup' ? 'Pickup' : 'Delivery'} location set from map`);
         checkRouteAvailability();
         
         // Don't close the modal - let user continue interacting
