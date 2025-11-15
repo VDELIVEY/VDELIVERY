@@ -1,4 +1,4 @@
-<!DOCTYP<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,26 +12,6 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <style>
         .notification { font-family: var(--font-primary, sans-serif); }
-        .optional-section { margin-top: 15px; }
-        .optional-toggle {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            padding: 10px 15px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-        }
-        .optional-toggle:hover { background: rgba(255,255,255,0.08); }
-        .optional-content {
-            margin-top: 15px;
-            padding: 15px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
         .google-maps-btn {
             background: #4285F4;
             color: white;
@@ -59,7 +39,7 @@
             margin-top: 10px;
             flex-wrap: wrap;
         }
-
+        
         /* Enhanced Map Picker Modal */
         .map-picker-modal {
             display: none;
@@ -72,7 +52,7 @@
             z-index: 10000;
             backdrop-filter: blur(5px);
         }
-
+        
         .map-picker-container {
             display: flex;
             flex-direction: column;
@@ -85,7 +65,7 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
+        
         .map-picker-header {
             background: var(--space-gray);
             padding: var(--space-md);
@@ -94,7 +74,7 @@
             justify-content: space-between;
             align-items: center;
         }
-
+        
         .map-picker-header h2 {
             font-size: 1.5rem;
             font-weight: 600;
@@ -104,7 +84,7 @@
             background-clip: text;
             margin: 0;
         }
-
+        
         .close-map-picker {
             background: none;
             border: none;
@@ -115,30 +95,30 @@
             border-radius: 4px;
             transition: all 0.3s ease;
         }
-
+        
         .close-map-picker:hover {
             background: rgba(255, 255, 255, 0.1);
             color: var(--space-electric);
         }
-
+        
         .map-picker-main {
             display: flex;
             flex: 1;
             overflow: hidden;
         }
-
+        
         .map-picker-map-container {
             flex: 7; /* 70% width */
             height: 100%;
             position: relative;
             background: var(--space-gray);
         }
-
+        
         .map-picker-map {
             height: 100%;
             width: 100%;
         }
-
+        
         .map-picker-controls {
             flex: 3; /* 30% width */
             background: var(--space-dark);
@@ -149,19 +129,19 @@
             flex-direction: column;
             gap: var(--space-md);
         }
-
+        
         .map-picker-search-section {
             background: rgba(255, 255, 255, 0.05);
             border-radius: var(--radius-md);
             padding: var(--space-md);
         }
-
+        
         .map-picker-search-box {
             display: flex;
             gap: var(--space-sm);
             margin-bottom: var(--space-sm);
         }
-
+        
         .map-picker-search-input {
             flex: 1;
             background: rgba(255, 255, 255, 0.1);
@@ -171,11 +151,11 @@
             color: var(--space-white);
             font-size: 1rem;
         }
-
+        
         .map-picker-search-input::placeholder {
             color: rgba(255, 255, 255, 0.5);
         }
-
+        
         .map-picker-search-btn {
             background: var(--space-blue);
             border: none;
@@ -190,18 +170,18 @@
             gap: 8px;
             white-space: nowrap;
         }
-
+        
         .map-picker-search-btn:hover {
             background: #0069d9;
             transform: translateY(-1px);
         }
-
+        
         .map-picker-location-buttons {
             display: grid;
             grid-template-columns: 1fr;
             gap: var(--space-sm);
         }
-
+        
         .map-picker-location-btn {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -216,50 +196,50 @@
             justify-content: center;
             gap: 8px;
         }
-
+        
         .map-picker-location-btn:hover {
             background: rgba(255, 255, 255, 0.2);
             transform: translateY(-1px);
         }
-
+        
         .map-picker-location-btn.primary {
             background: var(--space-green);
         }
-
+        
         .map-picker-location-btn.primary:hover {
             background: #218838;
         }
-
+        
         .map-picker-coordinates-section {
             background: rgba(255, 255, 255, 0.05);
             border-radius: var(--radius-md);
             padding: var(--space-md);
         }
-
+        
         .map-picker-coordinates-section h3 {
             font-size: 1rem;
             margin-bottom: var(--space-sm);
             color: var(--space-electric);
         }
-
+        
         .map-picker-coordinates-display {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: var(--space-sm);
             margin-bottom: var(--space-sm);
         }
-
+        
         .map-picker-coordinate-group {
             display: flex;
             flex-direction: column;
             gap: 4px;
         }
-
+        
         .map-picker-coordinate-group label {
             font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.7);
         }
-
+        
         .map-picker-coordinate-input {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -269,18 +249,18 @@
             font-family: 'Monaco', 'Menlo', monospace;
             font-size: 0.9rem;
         }
-
+        
         .map-picker-address-display {
             margin-top: var(--space-sm);
         }
-
+        
         .map-picker-address-display label {
             font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.7);
             display: block;
             margin-bottom: 4px;
         }
-
+        
         .map-picker-address-input {
             width: 100%;
             background: rgba(255, 255, 255, 0.1);
@@ -292,13 +272,13 @@
             min-height: 60px;
             resize: vertical;
         }
-
+        
         .map-picker-actions-section {
             display: flex;
             gap: var(--space-sm);
             margin-top: auto;
         }
-
+        
         .map-picker-action-btn {
             flex: 1;
             padding: var(--space-md);
@@ -312,28 +292,28 @@
             justify-content: center;
             gap: 8px;
         }
-
+        
         .map-picker-action-btn.primary {
             background: var(--space-blue);
             color: var(--space-white);
         }
-
+        
         .map-picker-action-btn.primary:hover {
             background: #0069d9;
             transform: translateY(-2px);
         }
-
+        
         .map-picker-action-btn.secondary {
             background: rgba(255, 255, 255, 0.1);
             color: var(--space-white);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-
+        
         .map-picker-action-btn.secondary:hover {
             background: rgba(255, 255, 255, 0.2);
             transform: translateY(-2px);
         }
-
+        
         /* Map loading state */
         .map-loading-overlay {
             position: absolute;
@@ -349,13 +329,13 @@
             color: var(--space-white);
             z-index: 1000;
         }
-
+        
         .map-loading-overlay i {
             font-size: 2rem;
             margin-bottom: var(--space-sm);
             color: var(--space-electric);
         }
-
+        
         /* Responsive design */
         @media (max-width: 768px) {
             .map-picker-container {
@@ -364,32 +344,32 @@
                 margin: 0;
                 border-radius: 0;
             }
-
+            
             .map-picker-main {
                 flex-direction: column;
             }
-
+            
             .map-picker-map-container {
                 flex: 7; /* 70% height */
                 width: 100%;
             }
-
+            
             .map-picker-controls {
                 flex: 3; /* 30% height */
                 width: 100%;
                 border-left: none;
                 border-top: 1px solid rgba(255, 255, 255, 0.1);
             }
-
+            
             .map-picker-coordinates-display {
                 grid-template-columns: 1fr;
             }
-
+            
             .map-picker-actions-section {
                 flex-direction: column;
             }
         }
-
+        
         /* Enhanced custom marker for map picker */
         .map-picker-marker {
             width: 40px;
@@ -403,7 +383,7 @@
             margin: -20px 0 0 -20px;
             animation: bounce 1s infinite;
         }
-
+        
         .map-picker-marker:after {
             content: '';
             width: 20px;
@@ -413,13 +393,13 @@
             position: absolute;
             border-radius: 50%;
         }
-
+        
         @keyframes bounce {
             0% { transform: rotate(-45deg) translateY(0px); }
             50% { transform: rotate(-45deg) translateY(-10px); }
             100% { transform: rotate(-45deg) translateY(0px); }
         }
-
+        
         /* Instructions panel */
         .map-picker-instructions {
             background: rgba(0, 212, 255, 0.1);
@@ -428,13 +408,13 @@
             padding: var(--space-sm);
             margin-bottom: var(--space-md);
         }
-
+        
         .map-picker-instructions h4 {
             color: var(--space-electric);
             margin-bottom: 5px;
             font-size: 0.9rem;
         }
-
+        
         .map-picker-instructions p {
             color: rgba(255, 255, 255, 0.8);
             font-size: 0.8rem;
@@ -446,14 +426,19 @@
         .delivery-marker {
             background: var(--space-green) !important;
         }
-
+        
         .delivery-instructions {
             background: rgba(40, 167, 69, 0.1) !important;
             border: 1px solid rgba(40, 167, 69, 0.3) !important;
         }
-
+        
         .delivery-instructions h4 {
             color: var(--space-green) !important;
+        }
+
+        /* Hidden coordinate inputs for form submission */
+        .hidden-coordinates {
+            display: none;
         }
     </style>
 </head>
@@ -542,40 +527,9 @@
                                 </div>
                             </div>
 
-                            <!-- Optional Map Section -->
-                            <div class="optional-section">
-                                <div class="optional-toggle" id="pickupMapToggle">
-                                    <i class="fas fa-map"></i>
-                                    <span>Set precise pickup location on map (Optional)</span>
-                                    <i class="fas fa-chevron-down" style="margin-left: auto;"></i>
-                                </div>
-                                <div class="optional-content" id="pickupMapContent" style="display:none;">
-                                    <div class="map-section">
-                                        <div class="map-header">
-                                            <h4>Set Pickup Point</h4>
-                                            <span class="map-instruction">Click on the map (within Uganda) or use My Location</span>
-                                            <div class="map-controls-group">
-                                                <button type="button" id="getCurrentLocationPickupMap" class="location-btn"><i class="fas fa-location-arrow"></i> My Location</button>
-                                            </div>
-                                        </div>
-                                        <div id="pickupMap" class="modern-map">
-                                            <div class="map-loading"><i class="fas fa-spinner fa-spin"></i><p>Loading map...</p></div>
-                                        </div>
-                                        <div class="coordinates-display">
-                                            <div class="coordinate-group"><label>Latitude:</label><input type="text" id="pickupLat" readonly class="coordinate-input" placeholder="Click on map to set"></div>
-                                            <div class="coordinate-group"><label>Longitude:</label><input type="text" id="pickupLng" readonly class="coordinate-input" placeholder="Click on map to set"></div>
-                                        </div>
-                                        <div class="location-link-container">
-                                            <label>Location Link:</label>
-                                            <div class="link-display">
-                                                <input type="text" id="pickupLink" readonly placeholder="Set location to generate link">
-                                                <button type="button" onclick="copyToClipboard('pickupLink')" class="copy-btn"><i class="fas fa-copy"></i></button>
-                                            </div>
-                                            <input type="hidden" id="pickupLinkHidden" name="Pickup Map Link">
-                                            <input type="hidden" id="pickupCoordsHidden" name="Pickup Coordinates" value="Not set">
-                                        </div>
-                                    </div>
-                                </div>
+                            <!-- Hidden coordinates for pickup -->
+                            <div class="hidden-coordinates">
+                                <input type="hidden" id="pickupCoordsHidden" name="Pickup Coordinates" value="Not set">
                             </div>
                         </div>
 
@@ -609,7 +563,11 @@
                                 </div>
                             </div>
 
-
+                            <!-- Hidden coordinates for delivery -->
+                            <div class="hidden-coordinates">
+                                <input type="hidden" id="deliveryCoordsHidden" name="Delivery Coordinates" value="Not set">
+                            </div>
+                        </div>
 
                         <!-- Route Info (hidden until both points are inside Uganda) -->
                         <div class="route-section" id="routeSection" style="display:none;">
@@ -700,7 +658,7 @@
                     <div class="brand-text">VDELIVER</div>
                     <p>Fast, reliable deliveries across Uganda.</p>
                 </div>
-
+               
             </div>
             <div class="footer-bottom">© VDELIVER — Uganda</div>
         </footer>
@@ -715,7 +673,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-
+            
             <div class="map-picker-main">
                 <div class="map-picker-map-container">
                     <div id="mapPickerMap" class="map-picker-map">
@@ -725,7 +683,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="map-picker-controls">
                     <div class="map-picker-instructions" id="mapPickerInstructions">
                         <h4>How to select a location:</h4>
@@ -734,7 +692,7 @@
                            3. Review the coordinates and address<br>
                            4. Click "Select This Location" to confirm</p>
                     </div>
-
+                    
                     <div class="map-picker-search-section">
                         <div class="map-picker-search-box">
                             <input type="text" id="mapPickerSearchInput" class="map-picker-search-input" placeholder="Search for places in Uganda...">
@@ -742,7 +700,7 @@
                                 <i class="fas fa-search"></i> Search
                             </button>
                         </div>
-
+                        
                         <div class="map-picker-location-buttons">
                             <button id="mapPickerUseMyLocation" class="map-picker-location-btn primary">
                                 <i class="fas fa-location-arrow"></i> Use My Location
@@ -752,7 +710,7 @@
                             </button>
                         </div>
                     </div>
-
+                    
                     <div class="map-picker-coordinates-section">
                         <h3>Selected Location</h3>
                         <div class="map-picker-coordinates-display">
@@ -765,13 +723,13 @@
                                 <input type="text" id="mapPickerLongitude" class="map-picker-coordinate-input" readonly placeholder="Click on map">
                             </div>
                         </div>
-
+                        
                         <div class="map-picker-address-display">
                             <label>Address:</label>
                             <textarea id="mapPickerAddress" class="map-picker-address-input" readonly placeholder="Address will appear here"></textarea>
                         </div>
                     </div>
-
+                    
                     <div class="map-picker-actions-section">
                         <button id="mapPickerSelectLocation" class="map-picker-action-btn primary">
                             <i class="fas fa-check-circle"></i> Select This Location
@@ -789,31 +747,26 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
-    <!-- UPDATED SCRIPT WITH ENHANCED MAP PICKER FOR BOTH LOCATIONS -->
+    <!-- UPDATED SCRIPT WITHOUT OPTIONAL MAP SECTIONS -->
     <script>
     // Uganda bounds (approx): south, west, north, east
     const UGANDA_BOUNDS = L.latLngBounds([ -1.5, 29.5 ], [ 4.9, 35.1 ]);
-
-    // Map and markers
-    let pickupMap, deliveryMap;
-    let pickupMarker, deliveryMarker;
-    let routeLayer = null;
-    let currentFormData = null;
 
     // Map Picker Variables
     let mapPickerMap;
     let mapPickerMarker;
     let selectedMapPickerLocation = null;
     let currentLocationType = ''; // 'pickup' or 'delivery'
+    let currentFormData = null;
 
     // Open Map Picker Modal
     function openMapPicker(type) {
         currentLocationType = type;
-
+        
         // Update modal title and styling based on location type
         const title = document.getElementById('mapPickerTitle');
         const instructions = document.getElementById('mapPickerInstructions');
-
+        
         if (type === 'pickup') {
             title.textContent = 'Select Pickup Location - VDELIVER';
             instructions.className = 'map-picker-instructions';
@@ -835,10 +788,10 @@
                    4. Click "Select This Location" to confirm delivery point</p>
             `;
         }
-
+        
         // Show modal
         document.getElementById('mapPickerModal').style.display = 'block';
-
+        
         // Initialize map if not already done
         if (!mapPickerMap) {
             initMapPicker();
@@ -846,19 +799,19 @@
             // Reset to Kampala
             const kampala = [0.3476, 32.5825];
             mapPickerMap.setView(kampala, 12);
-
+            
             if (mapPickerMarker) {
                 mapPickerMarker.setLatLng(kampala);
                 // Update marker color based on location type
                 updateMapPickerMarkerStyle();
             }
-
+            
             // Reset form fields
             document.getElementById('mapPickerLatitude').value = '';
             document.getElementById('mapPickerLongitude').value = '';
             document.getElementById('mapPickerAddress').value = '';
             document.getElementById('mapPickerSearchInput').value = '';
-
+            
             selectedMapPickerLocation = null;
         }
     }
@@ -866,7 +819,7 @@
     // Update map picker marker style based on location type
     function updateMapPickerMarkerStyle() {
         if (!mapPickerMarker) return;
-
+        
         const markerElement = mapPickerMarker.getElement();
         if (markerElement) {
             if (currentLocationType === 'delivery') {
@@ -881,26 +834,26 @@
     function initMapPicker() {
         // Set initial location to Kampala, Uganda
         const kampala = [0.3476, 32.5825];
-
+        
         // Hide loading overlay
         const loadingOverlay = document.querySelector('.map-loading-overlay');
-
+        
         // Create map with different tile layers
         const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         });
-
+        
         const carto = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
             maxZoom: 20,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>'
         });
-
+        
         const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             maxZoom: 19,
             attribution: '&copy; <a href="https://www.esri.com/">Esri</a>'
         });
-
+        
         // Create map
         mapPickerMap = L.map('mapPickerMap', {
             center: kampala,
@@ -908,20 +861,20 @@
             layers: [carto],
             zoomControl: false
         });
-
+        
         // Add controls
         L.control.zoom({ position: 'topright' }).addTo(mapPickerMap);
         L.control.scale({ imperial: false, position: 'bottomleft' }).addTo(mapPickerMap);
-
+        
         // Add layer control
         const baseMaps = {
             "Street": carto,
             "OpenStreetMap": osm,
             "Satellite": satellite
         };
-
+        
         L.control.layers(baseMaps, null, { position: 'topright' }).addTo(mapPickerMap);
-
+        
         // Add geocoder
         const geocoder = L.Control.geocoder({
             position: 'topleft',
@@ -936,22 +889,22 @@
             updateMapPickerLocation(center);
             mapPickerMap.setView(center, 16);
         }).addTo(mapPickerMap);
-
+        
         // Create custom marker
         const mapPickerIcon = L.divIcon({
             className: 'map-picker-marker',
             iconSize: [40, 40],
             iconAnchor: [20, 40]
         });
-
+        
         mapPickerMarker = L.marker(kampala, {
             icon: mapPickerIcon,
             draggable: true
         }).addTo(mapPickerMap);
-
+        
         // Update marker style based on current location type
         updateMapPickerMarkerStyle();
-
+        
         // Add click listener to map
         mapPickerMap.on('click', function(e) {
             if (!UGANDA_BOUNDS.contains(e.latlng)) {
@@ -960,7 +913,7 @@
             }
             updateMapPickerLocation(e.latlng);
         });
-
+        
         // Add dragend listener to marker
         mapPickerMarker.on('dragend', function(e) {
             const latlng = e.target.getLatLng();
@@ -977,48 +930,48 @@
             }
             updateMapPickerLocation(latlng);
         });
-
+        
         // Initialize with Kampala
         updateMapPickerLocation(kampala);
-
+        
         // Hide loading overlay
         setTimeout(() => {
             loadingOverlay.style.display = 'none';
         }, 1000);
-
+        
         // Set up event listeners for buttons
         document.getElementById('mapPickerSearchBtn').addEventListener('click', function() {
             performMapPickerSearch();
         });
-
+        
         document.getElementById('mapPickerUseMyLocation').addEventListener('click', function() {
             useMapPickerMyLocation();
         });
-
+        
         document.getElementById('mapPickerResetLocation').addEventListener('click', function() {
             updateMapPickerLocation(kampala);
             mapPickerMap.setView(kampala, 12);
         });
-
+        
         document.getElementById('mapPickerSelectLocation').addEventListener('click', function() {
             selectMapPickerLocation();
         });
-
+        
         document.getElementById('mapPickerCancelSelection').addEventListener('click', function() {
             closeMapPicker();
         });
-
+        
         document.getElementById('closeMapPicker').addEventListener('click', function() {
             closeMapPicker();
         });
-
+        
         // Allow pressing Enter in search box
         document.getElementById('mapPickerSearchInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 performMapPickerSearch();
             }
         });
-
+        
         // Close modal when clicking outside
         document.getElementById('mapPickerModal').addEventListener('click', function(e) {
             if (e.target === this) {
@@ -1029,24 +982,24 @@
 
     function updateMapPickerLocation(latlng) {
         selectedMapPickerLocation = latlng;
-
+        
         const lat = latlng.lat ? latlng.lat.toFixed(6) : latlng[0].toFixed(6);
         const lng = latlng.lng ? latlng.lng.toFixed(6) : latlng[1].toFixed(6);
-
+        
         // Update coordinates display
         document.getElementById('mapPickerLatitude').value = lat;
         document.getElementById('mapPickerLongitude').value = lng;
-
+        
         // Update marker position
         if (mapPickerMarker) {
             const position = latlng.lat ? latlng : L.latLng(latlng[0], latlng[1]);
             mapPickerMarker.setLatLng(position);
         }
-
+        
         // Center map on selected location
         const position = latlng.lat ? latlng : L.latLng(latlng[0], latlng[1]);
         mapPickerMap.setView(position, Math.max(mapPickerMap.getZoom(), 14));
-
+        
         // Get address from coordinates
         getAddressFromCoordinates(lat, lng).then(addr => {
             if (addr && addr.display_name) {
@@ -1062,7 +1015,7 @@
     function performMapPickerSearch() {
         const query = document.getElementById('mapPickerSearchInput').value.trim();
         if (!query) return;
-
+        
         // Use Nominatim for search (free OpenStreetMap geocoding)
         fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query + ', Uganda')}&limit=1`)
             .then(response => response.json())
@@ -1070,12 +1023,12 @@
                 if (data && data.length > 0) {
                     const result = data[0];
                     const latlng = [parseFloat(result.lat), parseFloat(result.lon)];
-
+                    
                     if (!UGANDA_BOUNDS.contains(latlng)) {
                         showNotification('Search result is outside Uganda — please pick a location inside Uganda.');
                         return;
                     }
-
+                    
                     updateMapPickerLocation(latlng);
                     mapPickerMap.setView(latlng, 16);
                     document.getElementById('mapPickerAddress').value = result.display_name;
@@ -1094,12 +1047,12 @@
             showNotification('Geolocation is not supported by your browser');
             return;
         }
-
+        
         const button = document.getElementById('mapPickerUseMyLocation');
         const originalText = button.innerHTML;
         button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Locating...';
         button.disabled = true;
-
+        
         navigator.geolocation.getCurrentPosition(
             function(position) {
                 const latlng = L.latLng(position.coords.latitude, position.coords.longitude);
@@ -1130,176 +1083,30 @@
             showNotification('Please select a location first by clicking on the map.');
             return;
         }
-
+        
         const lat = selectedMapPickerLocation.lat ? selectedMapPickerLocation.lat.toFixed(6) : selectedMapPickerLocation[0].toFixed(6);
         const lng = selectedMapPickerLocation.lng ? selectedMapPickerLocation.lng.toFixed(6) : selectedMapPickerLocation[1].toFixed(6);
         const address = document.getElementById('mapPickerAddress').value;
-
+        
         // Update the form with selected location
         if (currentLocationType === 'pickup') {
             document.getElementById('pickupAddress').value = address;
             document.getElementById('pickupCoordsHidden').value = `${lat}, ${lng}`;
-
-            // If pickup map is open, update it too
-            if (pickupMap && pickupMarker) {
-                const latlng = L.latLng(parseFloat(lat), parseFloat(lng));
-                updateLocation(latlng, 'pickup');
-            }
-
             showNotification('Pickup location set from map');
         } else {
             document.getElementById('deliveryAddress').value = address;
             document.getElementById('deliveryCoordsHidden').value = `${lat}, ${lng}`;
-
-            // If delivery map is open, update it too
-            if (deliveryMap && deliveryMarker) {
-                const latlng = L.latLng(parseFloat(lat), parseFloat(lng));
-                updateLocation(latlng, 'delivery');
-            }
-
             showNotification('Delivery location set from map');
         }
-
+        
         checkRouteAvailability();
-
+        
         // Don't close the modal - let user continue interacting
         // Only close if they explicitly click cancel or the close button
     }
 
     function closeMapPicker() {
         document.getElementById('mapPickerModal').style.display = 'none';
-    }
-
-    // The rest of your existing functions remain the same...
-    // (initMaps, onMapClick, onMarkerDragEnd, updateLocation, getAddressFromCoordinates, etc.)
-
-    // Initialize maps
-    function initMaps() {
-        const defaultCenter = [0.3476, 32.5825]; // Kampala
-        const defaultZoom = 12;
-
-        const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 });
-        const carto = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 20 });
-
-        // Only initialize maps if their containers exist
-        if (document.getElementById('pickupMap')) {
-            pickupMap = L.map('pickupMap', { center: defaultCenter, zoom: defaultZoom, layers: [carto], zoomControl: false });
-            L.control.zoom({ position: 'topright' }).addTo(pickupMap);
-            L.control.scale({ imperial: false, position: 'bottomleft' }).addTo(pickupMap);
-            L.control.layers({ 'Street': carto, 'OSM': osm }, null, { position: 'topright' }).addTo(pickupMap);
-
-            // Geocoder for pickup
-            L.Control.geocoder({ position: 'topleft' }).on('markgeocode', function(e){
-                const center = e.geocode.center;
-                if (!UGANDA_BOUNDS.contains(center)) {
-                    showNotification('Search result is outside Uganda — please pick a location inside Uganda.');
-                    return;
-                }
-                updateLocation(center, 'pickup');
-            }).addTo(pickupMap);
-
-            const pickupIcon = L.divIcon({ className: 'custom-marker pickup-marker', html: '<div class="marker-pulse pickup-pulse"></div><div class="marker-icon"><i class="fas fa-arrow-up"></i></div>', iconSize: [40,40], iconAnchor: [20,40] });
-            pickupMarker = L.marker(defaultCenter, { icon: pickupIcon, draggable: true }).addTo(pickupMap);
-            pickupMap.on('click', function(e){ onMapClick(e, 'pickup'); });
-            pickupMarker.on('dragend', function(e){ onMarkerDragEnd(e, 'pickup'); });
-        }
-
-        if (document.getElementById('deliveryMap')) {
-            deliveryMap = L.map('deliveryMap', { center: defaultCenter, zoom: defaultZoom, layers: [carto], zoomControl: false });
-            L.control.zoom({ position: 'topright' }).addTo(deliveryMap);
-            L.control.scale({ imperial: false, position: 'bottomleft' }).addTo(deliveryMap);
-            L.control.layers({ 'Street': carto, 'OSM': osm }, null, { position: 'topright' }).addTo(deliveryMap);
-
-            // Geocoder for delivery
-            L.Control.geocoder({ position: 'topleft' }).on('markgeocode', function(e){
-                const center = e.geocode.center;
-                if (!UGANDA_BOUNDS.contains(center)) {
-                    showNotification('Search result is outside Uganda — please pick a location inside Uganda.');
-                    return;
-                }
-                updateLocation(center, 'delivery');
-            }).addTo(deliveryMap);
-
-            const deliveryIcon = L.divIcon({ className: 'custom-marker delivery-marker', html: '<div class="marker-pulse delivery-pulse"></div><div class="marker-icon"><i class="fas fa-flag-checkered"></i></div>', iconSize: [40,40], iconAnchor: [20,40] });
-            deliveryMarker = L.marker(defaultCenter, { icon: deliveryIcon, draggable: true }).addTo(deliveryMap);
-            deliveryMap.on('click', function(e){ onMapClick(e, 'delivery'); });
-            deliveryMarker.on('dragend', function(e){ onMarkerDragEnd(e, 'delivery'); });
-        }
-
-        document.querySelectorAll('.map-loading').forEach(el => {
-            if (el.parentElement.style.display !== 'none') {
-                el.style.display = 'none';
-            }
-        });
-
-        checkRouteAvailability();
-    }
-
-    // Map click handler that enforces Uganda bounds
-    function onMapClick(e, type) {
-        const latlng = e.latlng;
-        if (!UGANDA_BOUNDS.contains(latlng)) {
-            showNotification('Location outside Uganda — pick a point inside Uganda.');
-            return;
-        }
-        updateLocation(latlng, type);
-        showMapFeedback(type === 'pickup' ? pickupMap : deliveryMap, (type === 'pickup' ? 'Pickup' : 'Delivery') + ' location set');
-    }
-
-    function onMarkerDragEnd(e, type) {
-        const latlng = e.target.getLatLng();
-        if (!UGANDA_BOUNDS.contains(latlng)) {
-            showNotification('Marker outside Uganda — resetting to last valid position.');
-            const hidden = document.getElementById(type + 'CoordsHidden').value;
-            if (hidden && hidden !== 'Not set') {
-                const [lat, lng] = hidden.split(',').map(s => parseFloat(s.trim()));
-                e.target.setLatLng([lat, lng]);
-            } else {
-                e.target.setLatLng([0.3476, 32.5825]);
-            }
-            return;
-        }
-        updateLocation(latlng, type);
-        showMapFeedback(type === 'pickup' ? pickupMap : deliveryMap, (type === 'pickup' ? 'Pickup' : 'Delivery') + ' location updated');
-    }
-
-    // Update location fields and hidden inputs
-    function updateLocation(latlng, type) {
-        const lat = latlng.lat.toFixed(6);
-        const lng = latlng.lng.toFixed(6);
-        const mapLink = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=17/${lat}/${lng}`;
-
-        if (type === 'pickup') {
-            pickupMarker.setLatLng(latlng);
-            document.getElementById('pickupLat').value = lat;
-            document.getElementById('pickupLng').value = lng;
-            document.getElementById('pickupLink').value = mapLink;
-            document.getElementById('pickupLinkHidden').value = mapLink;
-            document.getElementById('pickupCoordsHidden').value = `${lat}, ${lng}`;
-            pickupMap.setView(latlng, Math.max(pickupMap.getZoom(), 14), { animate: true, duration: 0.4 });
-        } else {
-            deliveryMarker.setLatLng(latlng);
-            document.getElementById('deliveryLat').value = lat;
-            document.getElementById('deliveryLng').value = lng;
-            document.getElementById('deliveryLink').value = mapLink;
-            document.getElementById('deliveryLinkHidden').value = mapLink;
-            document.getElementById('deliveryCoordsHidden').value = `${lat}, ${lng}`;
-            deliveryMap.setView(latlng, Math.max(deliveryMap.getZoom(), 14), { animate: true, duration: 0.4 });
-        }
-
-        getAddressFromCoordinates(lat, lng).then(addr => {
-            if (addr && addr.country && addr.country.toLowerCase().includes('uganda')) {
-                const field = type === 'pickup' ? 'pickupAddress' : 'deliveryAddress';
-                const current = document.getElementById(field).value;
-                if (!current || current.toLowerCase().includes('enter') || current.trim() === '') {
-                    document.getElementById(field).value = addr.display_name || '';
-                }
-            } else {
-                showNotification('Selected location is not in Uganda (reverse lookup).');
-            }
-        }).catch(()=>{});
-
-        checkRouteAvailability();
     }
 
     // Reverse geocode using Nominatim and return parsed result
@@ -1357,14 +1164,10 @@
             if (!resp.ok) throw new Error('ORS failed');
 
             const data = await resp.json();
-            if (routeLayer) { try { pickupMap.removeLayer(routeLayer); deliveryMap.removeLayer(routeLayer);} catch(e){} }
-
-            routeLayer = L.geoJSON(data, { style: { color: '#00d4ff', weight: 6, opacity: 0.8 } }).addTo(pickupMap).addTo(deliveryMap);
-            const bounds = routeLayer.getBounds(); pickupMap.fitBounds(bounds, {padding:[20,20]}); deliveryMap.fitBounds(bounds, {padding:[20,20]});
-
-            const route = data.features[0];
-            const distanceKm = (route.properties.segments[0].distance / 1000);
-            const durationMin = Math.round(route.properties.segments[0].duration / 60);
+            
+            // Create a simple route display
+            const distanceKm = (data.features[0].properties.segments[0].distance / 1000);
+            const durationMin = Math.round(data.features[0].properties.segments[0].duration / 60);
             const rate = vehicle === 'motorcycle' ? 2500 : 5000;
             const estimatedCost = Math.round(3000 + Math.round(distanceKm) * rate);
 
@@ -1384,10 +1187,6 @@
         const rate = vehicle === 'motorcycle' ? 2500 : 5000;
         const estimatedCost = Math.round(3000 + straightKm * rate);
 
-        if (routeLayer) { try { pickupMap.removeLayer(routeLayer); deliveryMap.removeLayer(routeLayer);} catch(e){} }
-        routeLayer = L.polyline([[plat, plng], [dlat, dlng]], { color: '#00d4ff', weight: 4, dashArray: '6' }).addTo(pickupMap).addTo(deliveryMap);
-        const bounds = routeLayer.getBounds(); pickupMap.fitBounds(bounds, {padding:[20,20]}); deliveryMap.fitBounds(bounds, {padding:[20,20]});
-
         document.getElementById('routeDistance').textContent = straightKm.toFixed(1) + ' km';
         document.getElementById('routeDuration').textContent = durationEst + ' min';
         document.getElementById('routeCost').textContent = Math.round(estimatedCost).toLocaleString() + ' UGX';
@@ -1402,8 +1201,10 @@
     }
 
     function clearRoute() {
-        if (routeLayer) { try { pickupMap.removeLayer(routeLayer); deliveryMap.removeLayer(routeLayer);} catch(e){} }
-        routeLayer = null; document.getElementById('routeDistance').textContent='--'; document.getElementById('routeDuration').textContent='--'; document.getElementById('routeCost').textContent='--'; showNotification('Route cleared');
+        document.getElementById('routeDistance').textContent='--'; 
+        document.getElementById('routeDuration').textContent='--'; 
+        document.getElementById('routeCost').textContent='--'; 
+        showNotification('Route cleared');
     }
 
     // Geolocation with Uganda validation
@@ -1417,7 +1218,31 @@
                 showNotification('Your current physical location is outside Uganda. Please set a pickup/delivery point inside Uganda.');
                 button.innerHTML = original; button.disabled = false; return;
             }
-            updateLocation(latlng, type); showNotification('Location found'); button.innerHTML = original; button.disabled = false;
+            
+            const lat = latlng.lat.toFixed(6);
+            const lng = latlng.lng.toFixed(6);
+            
+            // Update the form with selected location
+            if (type === 'pickup') {
+                document.getElementById('pickupCoordsHidden').value = `${lat}, ${lng}`;
+                getAddressFromCoordinates(lat, lng).then(addr => {
+                    if (addr && addr.display_name) {
+                        document.getElementById('pickupAddress').value = addr.display_name;
+                    }
+                });
+                showNotification('Pickup location set from your location');
+            } else {
+                document.getElementById('deliveryCoordsHidden').value = `${lat}, ${lng}`;
+                getAddressFromCoordinates(lat, lng).then(addr => {
+                    if (addr && addr.display_name) {
+                        document.getElementById('deliveryAddress').value = addr.display_name;
+                    }
+                });
+                showNotification('Delivery location set from your location');
+            }
+            
+            checkRouteAvailability();
+            button.innerHTML = original; button.disabled = false;
         }, function(error){
             let msg = 'Unable to get location.';
             if (error.code === error.PERMISSION_DENIED) msg = 'Please allow location access in your browser.';
@@ -1425,25 +1250,11 @@
         }, { enableHighAccuracy:true, timeout:10000, maximumAge:60000 });
     }
 
-    // Copy to clipboard helper
-    function copyToClipboard(id) {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.select(); el.setSelectionRange(0, 99999);
-        try { navigator.clipboard.writeText(el.value).then(()=> showNotification('Link copied')) } catch(e) { document.execCommand('copy'); showNotification('Link copied'); }
-    }
-
     // Notifications
     function showNotification(message) {
         const notification = document.createElement('div'); notification.className='notification'; notification.textContent=message;
         notification.style.cssText = 'position:fixed;top:20px;right:20px;background:#00d4ff;color:#001; padding:10px 16px;border-radius:8px;z-index:10000;box-shadow:0 8px 24px rgba(0,0,0,0.4);font-weight:600;';
         document.body.appendChild(notification); setTimeout(()=>notification.remove(), 3500);
-    }
-
-    function showMapFeedback(map, message) {
-        if (!map) return;
-        L.popup({ closeButton:false, autoClose:true, className:'map-feedback' }).setLatLng(map.getCenter()).setContent(message).openOn(map);
-        setTimeout(()=>{ try{ map.closePopup(); }catch(e){} }, 1200);
     }
 
     // Form submit with validation specific to Uganda
@@ -1456,28 +1267,28 @@
     // FIXED FORM SUBMISSION - SIMPLIFIED AND RELIABLE
     document.getElementById('deliveryForm').addEventListener('submit', async function(e){
         e.preventDefault();
-
+        
         // Client validation
         const required = ['senderName','senderPhone','senderEmail','recipientName','recipientPhone','packageDescription','vehicleType','pickupLandmark','deliveryLandmark'];
-        for (let id of required) {
-            const el = document.getElementById(id);
-            if (!el || !el.value.trim()) {
-                el && el.focus();
-                showNotification('Please complete all required fields including landmarks');
-                return;
-            }
+        for (let id of required) { 
+            const el = document.getElementById(id); 
+            if (!el || !el.value.trim()) { 
+                el && el.focus(); 
+                showNotification('Please complete all required fields including landmarks'); 
+                return; 
+            } 
         }
-
+        
         // phone validation
-        if (!ugPhoneValid(document.getElementById('senderPhone').value)) {
-            showNotification('Sender phone must be a valid Ugandan number (e.g. +2567...)');
-            document.getElementById('senderPhone').focus();
-            return;
+        if (!ugPhoneValid(document.getElementById('senderPhone').value)) { 
+            showNotification('Sender phone must be a valid Ugandan number (e.g. +2567...)'); 
+            document.getElementById('senderPhone').focus(); 
+            return; 
         }
-        if (!ugPhoneValid(document.getElementById('recipientPhone').value)) {
-            showNotification('Recipient phone must be a valid Ugandan number (e.g. +2567...)');
-            document.getElementById('recipientPhone').focus();
-            return;
+        if (!ugPhoneValid(document.getElementById('recipientPhone').value)) { 
+            showNotification('Recipient phone must be a valid Ugandan number (e.g. +2567...)'); 
+            document.getElementById('recipientPhone').focus(); 
+            return; 
         }
 
         // terms agreement
@@ -1513,12 +1324,12 @@
         // Show success immediately (FormSubmit will handle email in background)
         document.getElementById('deliveryForm').style.display = 'none';
         document.getElementById('successMessage').style.display = 'block';
-
+        
         // Also try to submit to FormSubmit (but don't wait for it)
         try {
             const form = document.getElementById('deliveryForm');
             const formData = new FormData(form);
-
+            
             // Add extras for FormSubmit
             formData.append('Pickup Coordinates', currentFormData.pickupCoords);
             formData.append('Delivery Coordinates', currentFormData.deliveryCoords);
@@ -1528,12 +1339,12 @@
             formData.append('Submission Time', currentFormData.timestamp);
 
             // Submit in background - don't wait for response
-            fetch(form.action, {
-                method: 'POST',
+            fetch(form.action, { 
+                method: 'POST', 
                 body: formData,
                 headers: { 'Accept': 'application/json' }
             }).catch(err => console.log('FormSubmit background submission:', err));
-
+            
         } catch (err) {
             console.log('FormSubmit attempt completed');
         }
@@ -1559,7 +1370,7 @@
                 timestamp: new Date().toLocaleString('en-UG', { timeZone:'Africa/Kampala' })
             };
         }
-
+        
         const msg = generateWhatsAppMessage(currentFormData);
         const dispatcher = '256757268074';
         const url = `https://wa.me/${dispatcher}?text=${encodeURIComponent(msg)}`;
@@ -1582,7 +1393,7 @@ Name: ${fd.recipientName}
 Phone: ${fd.recipientPhone}
 
 DELIVERY:
-Address: ${fd.deliveryAddress}
+Address: ${fd.deliveryAddress}  
 Landmark: ${fd.deliveryLandmark}
 ${fd.deliveryCoords && fd.deliveryCoords !== 'Not set' ? `Coordinates: ${fd.deliveryCoords}` : ''}
 
@@ -1603,37 +1414,6 @@ Time: ${fd.timestamp}
 Sent via VDELIVER Uganda`.trim();
     }
 
-    // Toggle map sections
-    document.getElementById('pickupMapToggle').addEventListener('click', function() {
-        const content = document.getElementById('pickupMapContent');
-        const icon = this.querySelector('.fa-chevron-down, .fa-chevron-up');
-        if (content.style.display === 'none') {
-            content.style.display = 'block';
-            icon.className = 'fas fa-chevron-up';
-            setTimeout(() => {
-                if (!pickupMap) initMaps();
-            }, 100);
-        } else {
-            content.style.display = 'none';
-            icon.className = 'fas fa-chevron-down';
-        }
-    });
-
-    document.getElementById('deliveryMapToggle').addEventListener('click', function() {
-        const content = document.getElementById('deliveryMapContent');
-        const icon = this.querySelector('.fa-chevron-down, .fa-chevron-up');
-        if (content.style.display === 'none') {
-            content.style.display = 'block';
-            icon.className = 'fas fa-chevron-up';
-            setTimeout(() => {
-                if (!deliveryMap) initMaps();
-            }, 100);
-        } else {
-            content.style.display = 'none';
-            icon.className = 'fas fa-chevron-down';
-        }
-    });
-
     // Event listeners for Map Picker buttons
     document.getElementById('pickupMapPickerBtn').addEventListener('click', function(){ openMapPicker('pickup'); });
     document.getElementById('deliveryMapPickerBtn').addEventListener('click', function(){ openMapPicker('delivery'); });
@@ -1641,19 +1421,20 @@ Sent via VDELIVER Uganda`.trim();
     // Event listeners for location buttons
     document.getElementById('getCurrentLocationPickup').addEventListener('click', function(){ getCurrentLocation('pickup'); });
     document.getElementById('getCurrentLocationDelivery').addEventListener('click', function(){ getCurrentLocation('delivery'); });
-    document.getElementById('getCurrentLocationPickupMap').addEventListener('click', function(){ getCurrentLocation('pickup'); });
-    document.getElementById('getCurrentLocationDeliveryMap').addEventListener('click', function(){ getCurrentLocation('delivery'); });
     document.getElementById('calculateRoute').addEventListener('click', calculateRoute);
     document.getElementById('clearRoute').addEventListener('click', clearRoute);
 
     // Initialize on DOM ready
-    document.addEventListener('DOMContentLoaded', function(){
+    document.addEventListener('DOMContentLoaded', function(){ 
         // Check for success parameter in URL (from FormSubmit redirect)
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('success') === 'true') {
             document.getElementById('deliveryForm').style.display = 'none';
             document.getElementById('successMessage').style.display = 'block';
         }
+        
+        // Initialize route availability check
+        checkRouteAvailability();
     });
     </script>
 </body>
