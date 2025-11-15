@@ -32,6 +32,33 @@
             border-radius: 8px; 
             border: 1px solid rgba(255,255,255,0.05);
         }
+        .google-maps-btn {
+            background: #4285F4;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+        .google-maps-btn:hover {
+            background: #3367D6;
+            transform: translateY(-1px);
+        }
+        .google-maps-btn i {
+            font-size: 16px;
+        }
+        .location-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
     </style>
 </head>
 <body>
@@ -46,7 +73,6 @@
     </div>
     <div class="nav-links">
         <a href="index.html" class="nav-link active">Request Delivery</a>
-
         <a href="contact.html" class="nav-link">Contact</a>
     </div>
 </nav>
@@ -105,6 +131,14 @@
                                 <div class="form-group">
                                     <label for="pickupAddress">Address *</label>
                                     <input type="text" id="pickupAddress" name="Pickup Address" required class="modern-input" placeholder="Enter pickup address">
+                                    <div class="location-actions">
+                                        <button type="button" class="google-maps-btn" id="pickupGoogleMapsBtn">
+                                            <i class="fas fa-map-marked-alt"></i> Select from Google Maps
+                                        </button>
+                                        <button type="button" class="google-maps-btn" id="getCurrentLocationPickup" style="background: #0F9D58;">
+                                            <i class="fas fa-location-arrow"></i> Use My Location
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="pickupLandmark">Landmark *</label>
@@ -125,7 +159,7 @@
                                             <h4>Set Pickup Point</h4>
                                             <span class="map-instruction">Click on the map (within Uganda) or use My Location</span>
                                             <div class="map-controls-group">
-                                                <button type="button" id="getCurrentLocationPickup" class="location-btn"><i class="fas fa-location-arrow"></i> My Location</button>
+                                                <button type="button" id="getCurrentLocationPickupMap" class="location-btn"><i class="fas fa-location-arrow"></i> My Location</button>
                                             </div>
                                         </div>
                                         <div id="pickupMap" class="modern-map">
@@ -164,6 +198,14 @@
                                 <div class="form-group">
                                     <label for="deliveryAddress">Delivery Address *</label>
                                     <input type="text" id="deliveryAddress" name="Delivery Address" required class="modern-input" placeholder="Enter delivery address">
+                                    <div class="location-actions">
+                                        <button type="button" class="google-maps-btn" id="deliveryGoogleMapsBtn">
+                                            <i class="fas fa-map-marked-alt"></i> Select from Google Maps
+                                        </button>
+                                        <button type="button" class="google-maps-btn" id="getCurrentLocationDelivery" style="background: #0F9D58;">
+                                            <i class="fas fa-location-arrow"></i> Use My Location
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="deliveryLandmark">Landmark *</label>
@@ -184,7 +226,7 @@
                                             <h4>Set Delivery Point</h4>
                                             <span class="map-instruction">Click on the map (within Uganda) or use My Location</span>
                                             <div class="map-controls-group">
-                                                <button type="button" id="getCurrentLocationDelivery" class="location-btn"><i class="fas fa-location-arrow"></i> My Location</button>
+                                                <button type="button" id="getCurrentLocationDeliveryMap" class="location-btn"><i class="fas fa-location-arrow"></i> My Location</button>
                                             </div>
                                         </div>
                                         <div id="deliveryMap" class="modern-map">
@@ -307,7 +349,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
-    <!-- UPDATED SCRIPT WITH FIXED FORM SUBMISSION -->
+    <!-- UPDATED SCRIPT WITH GOOGLE MAPS INTEGRATION -->
     <script>
     // Uganda bounds (approx): south, west, north, east
     const UGANDA_BOUNDS = L.latLngBounds([ -1.5, 29.5 ], [ 4.9, 35.1 ]);
@@ -317,6 +359,175 @@
     let pickupMarker, deliveryMarker;
     let routeLayer = null;
     let currentFormData = null;
+
+    // Google Maps integration functions
+    function openGoogleMapsPicker(type) {
+        // Create a unique ID for the callback function
+        const callbackName = 'googleMapsCallback_' + type + '_' + Date.now();
+        
+        // Create URL for Google Maps with Uganda bounds
+        const ugandaCenter = '0.3476,32.5825'; // Kampala
+        const mapsUrl = `https://www.google.com/maps/embed/v1/view?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&center=${ugandaCenter}&zoom=10&maptype=roadmap`;
+        
+        // Create popup window
+        const width = 800;
+        const height = 600;
+        const left = (screen.width - width) / 2;
+        const top = (screen.height - height) / 2;
+        
+        const popup = window.open('', 'googleMapsPicker', `width=${width},height=${height},left=${left},top=${top}`);
+        
+        // Create HTML content for the popup
+        const popupContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Select Location - VDELIVER</title>
+                <style>
+                    body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: #f5f5f5; }
+                    .container { max-width: 100%; }
+                    .header { margin-bottom: 15px; }
+                    .instructions { background: #e3f2fd; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
+                    #map { height: 400px; width: 100%; border: 2px solid #4285F4; border-radius: 8px; }
+                    .actions { margin-top: 15px; text-align: center; }
+                    .btn { background: #4285F4; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 0 5px; }
+                    .btn:hover { background: #3367D6; }
+                    .btn.cancel { background: #f44336; }
+                    .btn.cancel:hover { background: #d32f2f; }
+                    .coordinates { margin: 10px 0; padding: 10px; background: white; border-radius: 5px; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h2>Select ${type === 'pickup' ? 'Pickup' : 'Delivery'} Location</h2>
+                    </div>
+                    <div class="instructions">
+                        <strong>Instructions:</strong> Navigate to your desired location in Uganda, then click on the map to select the exact spot.
+                    </div>
+                    <div id="map"></div>
+                    <div class="coordinates">
+                        <strong>Selected Coordinates:</strong> 
+                        <span id="selectedCoords">None selected</span>
+                    </div>
+                    <div class="actions">
+                        <button class="btn" onclick="selectLocation()">Select This Location</button>
+                        <button class="btn cancel" onclick="window.close()">Cancel</button>
+                    </div>
+                </div>
+
+                <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&callback=initMap" async defer><\/script>
+                <script>
+                    let selectedLocation = null;
+                    let map;
+                    
+                    function initMap() {
+                        const ugandaBounds = {
+                            north: 4.9,
+                            south: -1.5,
+                            east: 35.1,
+                            west: 29.5
+                        };
+                        
+                        map = new google.maps.Map(document.getElementById('map'), {
+                            center: { lat: 0.3476, lng: 32.5825 },
+                            zoom: 10,
+                            restriction: {
+                                latLngBounds: ugandaBounds,
+                                strictBounds: false
+                            }
+                        });
+                        
+                        // Add click listener
+                        map.addListener('click', function(event) {
+                            selectedLocation = event.latLng;
+                            document.getElementById('selectedCoords').textContent = 
+                                selectedLocation.lat().toFixed(6) + ', ' + selectedLocation.lng().toFixed(6);
+                        });
+                    }
+                    
+                    function selectLocation() {
+                        if (selectedLocation) {
+                            // Send data back to parent window
+                            window.opener.handleGoogleMapsSelection('${type}', {
+                                lat: selectedLocation.lat(),
+                                lng: selectedLocation.lng()
+                            });
+                            window.close();
+                        } else {
+                            alert('Please select a location on the map first.');
+                        }
+                    }
+                <\/script>
+            </body>
+            </html>
+        `;
+        
+        popup.document.write(popupContent);
+        popup.document.close();
+    }
+
+    // Handle Google Maps selection
+    function handleGoogleMapsSelection(type, location) {
+        if (!location || !location.lat || !location.lng) {
+            showNotification('No location selected from Google Maps.');
+            return;
+        }
+        
+        const latlng = L.latLng(location.lat, location.lng);
+        
+        // Validate Uganda bounds
+        if (!UGANDA_BOUNDS.contains(latlng)) {
+            showNotification('Selected location is outside Uganda. Please choose a location within Uganda.');
+            return;
+        }
+        
+        // Update the form fields
+        updateLocationFromGoogleMaps(latlng, type);
+        showNotification(`${type === 'pickup' ? 'Pickup' : 'Delivery'} location set from Google Maps`);
+    }
+
+    // Update location from Google Maps selection
+    function updateLocationFromGoogleMaps(latlng, type) {
+        const lat = latlng.lat.toFixed(6);
+        const lng = latlng.lng.toFixed(6);
+        
+        // Update address field
+        const addressField = type === 'pickup' ? 'pickupAddress' : 'deliveryAddress';
+        document.getElementById(addressField).value = `Location selected from Google Maps (${lat}, ${lng})`;
+        
+        // Update coordinates if map is open
+        if (type === 'pickup' && pickupMap) {
+            updateLocation(latlng, 'pickup');
+        } else if (type === 'delivery' && deliveryMap) {
+            updateLocation(latlng, 'delivery');
+        } else {
+            // Set coordinates in hidden fields even if map isn't open
+            const coordsHidden = type === 'pickup' ? 'pickupCoordsHidden' : 'deliveryCoordsHidden';
+            document.getElementById(coordsHidden).value = `${lat}, ${lng}`;
+            
+            // Also update the link field if it exists
+            const mapLink = `https://www.google.com/maps?q=${lat},${lng}`;
+            const linkField = type === 'pickup' ? 'pickupLink' : 'deliveryLink';
+            if (document.getElementById(linkField)) {
+                document.getElementById(linkField).value = mapLink;
+            }
+            
+            const linkHidden = type === 'pickup' ? 'pickupLinkHidden' : 'deliveryLinkHidden';
+            if (document.getElementById(linkHidden)) {
+                document.getElementById(linkHidden).value = mapLink;
+            }
+        }
+        
+        // Try to get the actual address
+        getAddressFromCoordinates(lat, lng).then(addr => {
+            if (addr && addr.display_name) {
+                document.getElementById(addressField).value = addr.display_name;
+            }
+        }).catch(() => {});
+        
+        checkRouteAvailability();
+    }
 
     // Initialize maps
     function initMaps() {
@@ -779,11 +990,20 @@ Sent via VDELIVER Uganda`.trim();
         }
     });
 
-    // Event listeners
+    // Event listeners for Google Maps buttons
+    document.getElementById('pickupGoogleMapsBtn').addEventListener('click', function(){ openGoogleMapsPicker('pickup'); });
+    document.getElementById('deliveryGoogleMapsBtn').addEventListener('click', function(){ openGoogleMapsPicker('delivery'); });
+
+    // Event listeners for location buttons
     document.getElementById('getCurrentLocationPickup').addEventListener('click', function(){ getCurrentLocation('pickup'); });
     document.getElementById('getCurrentLocationDelivery').addEventListener('click', function(){ getCurrentLocation('delivery'); });
+    document.getElementById('getCurrentLocationPickupMap').addEventListener('click', function(){ getCurrentLocation('pickup'); });
+    document.getElementById('getCurrentLocationDeliveryMap').addEventListener('click', function(){ getCurrentLocation('delivery'); });
     document.getElementById('calculateRoute').addEventListener('click', calculateRoute);
     document.getElementById('clearRoute').addEventListener('click', clearRoute);
+
+    // Make the Google Maps handler function globally accessible
+    window.handleGoogleMapsSelection = handleGoogleMapsSelection;
 
     // Initialize on DOM ready
     document.addEventListener('DOMContentLoaded', function(){ 
