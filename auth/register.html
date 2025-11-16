@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | VDELIVER</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/auth.css">
+    <!-- ADD SUPABASE SCRIPT -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="app-container">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <div class="logo-icon">
+                    <img src="../logo.jpeg" alt="VDELIVER Logo" class="logo-image">
+                </div>
+                <span class="brand-text">VDELIVER</span>
+            </div>
+            <div class="nav-links">
+                <a href="../index.html" class="nav-link">Request Delivery</a>
+                <a href="../contact.html" class="nav-link">Contact</a>
+                <a href="login.html" class="nav-link">Login</a>
+            </div>
+        </nav>
+
+        <main class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h1>Create Your Account</h1>
+                    <p>Join VDELIVER for faster deliveries and order tracking</p>
+                </div>
+
+                <form id="registerForm" class="auth-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="fullName">Full Name *</label>
+                            <input type="text" id="fullName" name="fullName" class="modern-input" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" class="modern-input" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number * (Uganda)</label>
+                            <input type="tel" id="phone" name="phone" class="modern-input" placeholder="+2567..." required>
+                            <div class="input-hint">We'll use this for delivery updates</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password">Password *</label>
+                            <input type="password" id="password" name="password" class="modern-input" required minlength="6">
+                            <div class="password-strength">
+                                <div class="strength-bar"></div>
+                                <div class="strength-text">Password strength</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password *</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" class="modern-input" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">
+                            I agree to the <a href="#" class="text-link">Terms of Service</a> and <a href="#" class="text-link">Privacy Policy</a> *
+                        </label>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="marketing" name="marketing">
+                        <label for="marketing">
+                            Send me delivery updates and special offers via WhatsApp & Email
+                        </label>
+                    </div>
+
+                    <button type="submit" class="cta-button primary full-width">
+                        <i class="fas fa-user-plus"></i>
+                        Create Account
+                    </button>
+
+                    <div class="auth-footer">
+                        <p>Already have an account? <a href="login.html" class="text-link">Sign in here</a></p>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- UPDATED SCRIPT REFERENCES -->
+    <script src="../js/supabase-config.js"></script>
+    <script src="../js/auth-supabase.js"></script>
+    <!-- Add to ALL HTML files before closing </body> -->
+<script src="js/navigation-system.js"></script>
+</body>
+</html>

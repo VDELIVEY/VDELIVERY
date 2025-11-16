@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | VDELIVER</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/auth.css">
+    <!-- ADD SUPABASE SCRIPT -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="app-container">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <div class="logo-icon">
+                    <img src="../logo.jpeg" alt="VDELIVER Logo" class="logo-image">
+                </div>
+                <span class="brand-text">VDELIVER</span>
+            </div>
+            <div class="nav-links">
+                <a href="../index.html" class="nav-link">Request Delivery</a>
+                <a href="../contact.html" class="nav-link">Contact</a>
+                <a href="register.html" class="nav-link">Sign Up</a>
+            </div>
+        </nav>
+
+        <main class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h1>Welcome Back</h1>
+                    <p>Sign in to your VDELIVER account</p>
+                </div>
+
+                <form id="loginForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="email">Email or Phone Number *</label>
+                        <input type="text" id="email" name="email" class="modern-input" placeholder="your@email.com or +2567..." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password *</label>
+                        <input type="password" id="password" name="password" class="modern-input" required>
+                    </div>
+
+                    <div class="login-options">
+                        <div class="remember-me">
+                            <input type="checkbox" id="rememberMe" name="rememberMe">
+                            <label for="rememberMe">Remember me</label>
+                        </div>
+                        <a href="forgot-password.html" class="forgot-password">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="cta-button primary full-width">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sign In
+                    </button>
+
+                    <div class="auth-footer">
+                        <p>Don't have an account? <a href="register.html" class="text-link">Create one here</a></p>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- UPDATED SCRIPT REFERENCES -->
+    <script src="../js/supabase-config.js"></script>
+    <script src="../js/auth-supabase.js"></script>
+    <!-- Add to ALL HTML files before closing </body> -->
+<script src="js/navigation-system.js"></script>
+</body>
+</html>

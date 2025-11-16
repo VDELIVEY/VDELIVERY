@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Your Delivery | VDELIVER</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .tracking-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: var(--space-xl);
+        }
+        
+        .tracking-header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .tracking-input {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .tracking-input input {
+            flex: 1;
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1.1rem;
+        }
+        
+        .tracking-result {
+            background: var(--gradient-card);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-top: var(--space-lg);
+        }
+        
+        .order-timeline {
+            margin: var(--space-xl) 0;
+            position: relative;
+        }
+        
+        .timeline-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            position: relative;
+        }
+        
+        .timeline-item:not(:last-child):before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 40px;
+            bottom: -30px;
+            width: 2px;
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .timeline-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .timeline-icon.active {
+            background: var(--space-electric);
+        }
+        
+        .timeline-icon.completed {
+            background: var(--space-green);
+        }
+        
+        .timeline-content {
+            flex: 1;
+        }
+        
+        .driver-info {
+            background: rgba(0,212,255,0.1);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin: var(--space-lg) 0;
+        }
+        
+        .live-map {
+            height: 300px;
+            background: var(--space-gray);
+            border-radius: var(--radius-md);
+            margin: var(--space-lg) 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <div class="logo-icon">
+                    <img src="logo.jpeg" alt="VDELIVER Logo" class="logo-image">
+                </div>
+                <span class="brand-text">VDELIVER</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Request Delivery</a>
+                <a href="track.html" class="nav-link active">Track Order</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+        </nav>
+
+        <main class="tracking-container">
+            <div class="tracking-header">
+                <h1>Track Your Delivery</h1>
+                <p>Enter your tracking number to see real-time updates</p>
+            </div>
+
+            <div class="tracking-input">
+                <input type="text" id="trackingNumber" placeholder="Enter tracking number (e.g., VD123ABC)" maxlength="10">
+                <button id="trackOrder" class="cta-button primary">
+                    <i class="fas fa-search"></i> Track
+                </button>
+            </div>
+
+            <div id="trackingResult" class="tracking-result" style="display: none;">
+                <!-- Tracking results will appear here -->
+            </div>
+
+            <div id="loadingSpinner" style="display: none; text-align: center;">
+                <i class="fas fa-spinner fa-spin fa-2x"></i>
+                <p>Loading delivery information...</p>
+            </div>
+
+            <div id="errorMessage" class="error-message" style="display: none;">
+                <!-- Error messages will appear here -->
+            </div>
+        </main>
+    </div>
+
+    <script src="js/supabase-config.js"></script>
+    <script src="js/tracking-system.js"></script>
+    <!-- Before closing </body> -->
+<script src="js/supabase-config.js"></script>
+<script src="js/tracking-system.js"></script>
+<script src="js/realtime-system.js"></script> 
+<!-- Add to ALL HTML files before closing </body> -->
+<script src="js/navigation-system.js"></script>
+</html>

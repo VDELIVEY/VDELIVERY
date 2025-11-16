@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | VDELIVER</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .admin-login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--space-dark);
+            padding: var(--space-xl);
+        }
+        
+        .admin-login-card {
+            background: var(--gradient-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .admin-logo {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .admin-logo .brand-text {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .admin-warning {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-bottom: var(--space-lg);
+            text-align: center;
+        }
+        
+        .admin-warning i {
+            color: #ff6b6b;
+            margin-right: var(--space-xs);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-login-container">
+        <div class="admin-login-card">
+            <div class="admin-logo">
+                <div class="logo-icon">
+                    <img src="../logo.jpeg" alt="VDELIVER Logo" class="logo-image" style="height: 50px;">
+                </div>
+                <div class="brand-text">VDELIVER ADMIN</div>
+                <p style="color: rgba(255,255,255,0.7); margin-top: 10px;">Business Operations Portal</p>
+            </div>
+            
+            <div class="admin-warning">
+                <i class="fas fa-shield-alt"></i>
+                <strong>Restricted Access</strong>
+                <p style="margin: 5px 0 0 0; font-size: 0.9rem;">Authorized personnel only</p>
+            </div>
+
+            <form id="adminLoginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="adminEmail">Admin Email *</label>
+                    <input type="email" id="adminEmail" name="email" class="modern-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="adminPassword">Password *</label>
+                    <input type="password" id="adminPassword" name="password" class="modern-input" required>
+                </div>
+
+                <button type="submit" class="cta-button primary full-width" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);">
+                    <i class="fas fa-lock"></i>
+                    Access Admin Portal
+                </button>
+
+                <div class="auth-footer">
+                    <p><a href="../index.html" class="text-link">← Back to Main Site</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/supabase-config.js"></script>
+    <script src="../js/admin-auth.js"></script>
+    <!-- Add to ALL HTML files before closing </body> -->
+    <script src="js/navigation-system.js"></script> 
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VDELIVER Driver App</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .driver-app {
+            min-height: 100vh;
+            background: var(--space-dark);
+        }
+        
+        .driver-header {
+            background: var(--space-gray);
+            padding: var(--space-md);
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .driver-status {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            margin-top: var(--space-sm);
+        }
+        
+        .status-toggle {
+            background: var(--space-green);
+            color: white;
+            border: none;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .status-toggle.offline {
+            background: var(--space-red);
+        }
+        
+        .driver-main {
+            padding: var(--space-md);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .assignment-card {
+            background: var(--gradient-card);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            border: 2px solid var(--space-electric);
+        }
+        
+        .assignment-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-sm);
+            margin-top: var(--space-lg);
+        }
+        
+        .action-btn {
+            padding: var(--space-md);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+        
+        .action-btn.primary {
+            background: var(--space-green);
+            color: white;
+        }
+        
+        .action-btn.secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .action-btn.danger {
+            background: var(--space-red);
+            color: white;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--space-xxl);
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-sm);
+            margin: var(--space-lg) 0;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--space-electric);
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .driver-tabs {
+            display: flex;
+            background: var(--space-gray);
+            border-radius: var(--radius-md);
+            padding: var(--space-sm);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .driver-tab {
+            flex: 1;
+            text-align: center;
+            padding: var(--space-sm);
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+        }
+        
+        .driver-tab.active {
+            background: var(--space-electric);
+            color: white;
+        }
+        
+        .earnings-breakdown {
+            background: rgba(255,255,255,0.05);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+        
+        .earning-item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .earning-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            color: var(--space-electric);
+        }
+    </style>
+</head>
+<body>
+    <div class="driver-app">
+        <header class="driver-header">
+            <h1>🚗 VDELIVER Driver</h1>
+            <div class="driver-status">
+                <button id="statusToggle" class="status-toggle">
+                    <i class="fas fa-circle"></i> ONLINE
+                </button>
+                <div id="driverInfo">
+                    <!-- Driver info will load here -->
+                </div>
+            </div>
+        </header>
+
+        <main class="driver-main">
+            <div class="driver-tabs">
+                <button class="driver-tab active" data-tab="assignments">Deliveries</button>
+                <button class="driver-tab" data-tab="earnings">Earnings</button>
+                <button class="driver-tab" data-tab="profile">Profile</button>
+            </div>
+
+            <!-- Assignments Tab -->
+            <div id="assignments-tab" class="tab-content active">
+                <div id="currentAssignment">
+                    <!-- Current assignment will appear here -->
+                </div>
+                
+                <div id="availableAssignments">
+                    <!-- Available assignments will appear here -->
+                </div>
+                
+                <div id="assignmentHistory">
+                    <!-- Assignment history will appear here -->
+                </div>
+            </div>
+
+            <!-- Earnings Tab -->
+            <div id="earnings-tab" class="tab-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="todayEarnings">0 UGX</div>
+                        <div class="stat-label">Today</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="weekEarnings">0 UGX</div>
+                        <div class="stat-label">This Week</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="completedDeliveries">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="driverRating">5.0</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+                
+                <div class="earnings-breakdown">
+                    <h3>Recent Earnings</h3>
+                    <div id="earningsList">
+                        <!-- Earnings list will appear here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="profile-tab" class="tab-content">
+                <div class="profile-info">
+                    <div class="form-group">
+                        <label>Driver Name</label>
+                        <input type="text" id="driverName" class="modern-input" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="text" id="driverPhone" class="modern-input" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Vehicle Details</label>
+                        <input type="text" id="vehicleDetails" class="modern-input">
+                    </div>
+                    <div class="form-group">
+                        <label>License Plate</label>
+                        <input type="text" id="licensePlate" class="modern-input">
+                    </div>
+                    <button id="updateProfile" class="cta-button primary">
+                        <i class="fas fa-save"></i> Update Profile
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/supabase-config.js"></script>
+    <script src="js/driver-app-final.js"></script>
+    <script src="js/realtime-system.js"></script>
+   <!-- Add to ALL HTML files before closing </body> -->
+<script src="js/navigation-system.js"></script>
+
+</body>
+</html>
